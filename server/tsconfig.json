@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    //Project config
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+
+    //type checking
+    "strict": true,
+    //optional helpers
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Javascript config
+    "allowJs": true
+  },
+
+  "include": ["src/**/*.ts"],
+
+  "exclude": ["node_modules"]
+}

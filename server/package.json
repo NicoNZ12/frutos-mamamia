@@ -1,0 +1,23 @@
+{
+  "name": "backend-frutos-mamamia",
+  "version": "1.0.0",
+  "description": "Backend para página de pedidos de frutos secos",
+  "license": "ISC",
+  "author": "Nicolás Núñez",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+  },
+  "dependencies": {
+    "@types/express": "5.0.3",
+    "@types/node": "24.7.0",
+    "express": "5.1.0"
+  },
+  "devDependencies": {
+    "ts-node-dev": "2.0.0",
+    "typescript": "5.9.3"
+  }
+}
