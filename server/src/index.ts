@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import './db/db'
+import categoryRoute from './routes/categoryRoute'
 
 dotenv.config()
 
@@ -16,6 +17,9 @@ app.use(express.json())
 app.get("/", (_req, res) => {
     res.status(200).json({ message: "Server corriendo correctamente!" })
 })
+
+//endpoints
+app.use("/categorias", categoryRoute)
 
 
 app.listen(PORT, () => {
