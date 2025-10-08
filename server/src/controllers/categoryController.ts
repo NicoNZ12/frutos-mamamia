@@ -50,7 +50,7 @@ export class Category {
             }
 
             const newCategory = {
-                name
+                name: name.toUpperCase()
             } 
 
             const savedCategory = await saveCategory(newCategory as ICategory)
@@ -78,7 +78,7 @@ export class Category {
                 return
             }
 
-            const updatedCategory = await updateCategory(categoryID, name)
+            const updatedCategory = await updateCategory(categoryID, name.toUpperCase())
 
             if(!updatedCategory){
                 res.status(404).json({ message: "No se encontró una categoría con ese ID para actualizar." })

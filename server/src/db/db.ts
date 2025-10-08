@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import { loadCategories } from './categoryDB'
 
 dotenv.config()
 const DB_URI = process.env.MONGO_URI as string
@@ -10,6 +11,8 @@ const DB_URI = process.env.MONGO_URI as string
 
         await mongoose.connect(DB_URI)
         console.log("Base de datos conectada.")
+
+        await loadCategories()
 
     }catch(error){
         const err = error as Error
