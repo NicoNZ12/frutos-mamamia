@@ -2,7 +2,7 @@ import {Request, Response} from 'express'
 import { getAllCategories, getOneCategory, removeCategory, saveCategory, updateCategory } from '../services/catageryService'
 import { ICategory } from '../model/catageryModel'
 
-export class Category {
+export class CategoryController {
     static async getCategories(_req: Request, res: Response): Promise<void> {
         try{
             const categories = await getAllCategories()

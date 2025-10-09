@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import './db/db'
 import categoryRoute from './routes/categoryRoute'
+import productRoute from './routes/productRoute'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ app.get("/", (_req, res) => {
 
 //endpoints
 app.use("/categorias", categoryRoute)
+app.use("/productos", productRoute)
 
 
 app.listen(PORT, () => {
