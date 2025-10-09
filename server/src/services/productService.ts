@@ -1,3 +1,4 @@
+import Category from "../model/catageryModel"
 import Product, { IProduct } from "../model/productModel"
 
 export const getAllProducts = async () => {
@@ -8,6 +9,15 @@ export const getAllProducts = async () => {
 export const getOneProduct = async (id: string) => {
     const product = await Product.findById(id)
     return product 
+}
+
+export const getProductsByCategoryName = async (categoryName: string) => {
+    const category = await Category.findOne({ name: { $regex: new RegExp(`^${categoryName.trim()}$`, "i") }})
+    if(!category){
+        return []
+    }
+    const filteredProducts = await Product.find({category: category._id}).populate("category")
+    return filteredProducts
 }
 
 export const saveProduct = async (product: IProduct) => {

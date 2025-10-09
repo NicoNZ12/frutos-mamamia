@@ -1,11 +1,21 @@
 import { Request, Response } from "express"
-import { getAllProducts, getOneProduct, removeProduct, saveProduct, updateProduct } from "../services/productService"
+import { getAllProducts, getOneProduct, removeProduct, saveProduct, updateProduct, getProductsByCategoryName } from "../services/productService"
 import { IProduct } from "../model/productModel"
 
 export class ProductController {
-    static async getProducts(_req: Request, res: Response): Promise<void> {
+    static async getProducts(req: Request, res: Response): Promise<void> {
         try {
-            const products = await getAllProducts()
+            const { category } = req.query           
+
+            let products: IProduct[] = []
+
+            if (typeof category === "string") {
+                products = await getProductsByCategoryName(category)
+                res.status(200).json(products)
+                return
+            }
+
+            products = await getAllProducts()
             res.status(200).json(products)
 
         } catch (error) {
