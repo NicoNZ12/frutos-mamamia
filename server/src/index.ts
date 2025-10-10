@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import './db/db'
 import categoryRoute from './routes/categoryRoute'
 import productRoute from './routes/productRoute'
+import userRoute from './routes/userRoute'
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ app.get("/", (_req, res) => {
 //endpoints
 app.use("/categorias", categoryRoute)
 app.use("/productos", productRoute)
+app.use("/usuarios", userRoute)
 
 
 app.listen(PORT, () => {
