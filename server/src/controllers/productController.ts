@@ -5,17 +5,18 @@ import { IProduct } from "../model/productModel"
 export class ProductController {
     static async getProducts(req: Request, res: Response): Promise<void> {
         try {
-            const { category } = req.query           
-
-            let products: IProduct[] = []
+            let { category, page, limit } = req.query     
+            
+            const pageNum = parseInt(page as string) || 1
+            const limitNum = parseInt(limit as string) || 10
 
             if (typeof category === "string") {
-                products = await getProductsByCategoryName(category)
+                const products = await getProductsByCategoryName(category)
                 res.status(200).json(products)
                 return
             }
 
-            products = await getAllProducts()
+            const products = await getAllProducts(pageNum, limitNum)
             res.status(200).json(products)
 
         } catch (error) {

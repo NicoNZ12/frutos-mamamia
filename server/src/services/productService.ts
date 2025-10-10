@@ -1,9 +1,26 @@
 import Category from "../model/catageryModel"
 import Product, { IProduct } from "../model/productModel"
 
-export const getAllProducts = async () => {
-    const products = await Product.find()
-    return products
+export const getAllProducts = async (page: number, limit: number) => {
+    const products = await Product.aggregate([
+        {
+            $facet: {
+                metadata: [{ $count: "total" }],
+                data: [
+                    { $skip: (page - 1) * limit },
+                    { $limit: limit },   
+                ]    
+            }
+        }
+    ])
+
+    return {
+        totalProducts: products[0].metadata[0] ? products[0].metadata[0].total : 0,
+        totatlPages: products[0].metadata[0] ? Math.ceil(products[0].metadata[0].total / limit) : 0,
+        page,
+        limit,
+        products: products[0].data
+    }
 }
 
 export const getOneProduct = async (id: string) => {
