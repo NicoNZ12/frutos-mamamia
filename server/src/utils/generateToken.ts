@@ -8,11 +8,12 @@ const jwt_secret = process.env.JWT_SECRET
 
 export const generateToken = (userData: IUser) => {
     if (!jwt_secret) {
-        throw new Error("JWT_SECRET no está definida como variable.");
+        throw new Error("Variable secreta no asignada.");
     }
 
     const user = {
         id: userData.id,
+        email: userData.email,
         isAdmin: userData.isAdmin
     };
 
