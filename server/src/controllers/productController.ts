@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { getAllProducts, getOneProduct, removeProduct, saveProduct, updateProduct, getProductsByCategoryName } from "../services/productService"
+import { getAllProducts, getOneProduct, removeProduct, saveProduct, updateProduct, getProductsByCategoryName, getProductsBySearch } from "../services/productService"
 import { IProduct } from "../model/productModel"
 
 export class ProductController {
@@ -48,6 +48,24 @@ export class ProductController {
             res.status(500).json({ message: "Error al obtener el producto.", error: err.message })
         }
 
+    }
+
+    static async searchProducts(req: Request, res: Response): Promise<void> {
+        try{
+            const { q } = req.query
+
+            if(!q){
+                res.status(400).json({ message: "El parámetro de búsqueda 'q' es obligatorio." })
+                return
+            }
+
+            const products = await getProductsBySearch(q as string)
+            res.status(200).json(products)
+
+        }catch(error){
+            const err = error as Error
+            res.status(500).json({ message: "Error al buscar productos.", error: err.message })
+        }
     }
 
     static async addProduct(req: Request, res: Response): Promise<void> {
