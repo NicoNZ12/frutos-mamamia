@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, getUsersBySearch, saveUser } from "../services/userService";
-import User from "../model/userModel";
-
+import { getAllUsers, getUsersBySearch } from "../services/userService";
 export class UserController {
     static async getUsers(req: Request, res: Response): Promise<void> {
         try{
@@ -35,32 +33,4 @@ export class UserController {
         }
     }
 
-    static async addUser(req: Request, res: Response): Promise<void> {
-        try{
-            const { name, lastName, email, password } = req.body
-
-            if(!name || !lastName || !email || !password){
-                res.status(400).json({ message: "Nombre, apellido, email y contraseña son obligatorios." })
-                return
-            }
-
-            const hashedPassword = await User.hashPassword(password)
-
-            const newUser = {
-                ...req.body,
-                name,
-                lastName,
-                email,
-                password: hashedPassword,
-            }
-
-            const savedUser = await saveUser(newUser)
-
-            res.status(201).json({ message: "Usuario creado correctamente.", payload: savedUser })
-
-        }catch(error){
-            const err = error as Error
-            res.status(500).json({ message: "Error al crear el usuario.", error: err.message })
-        }
-    }
 }
