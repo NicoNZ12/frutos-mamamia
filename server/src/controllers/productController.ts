@@ -59,7 +59,6 @@ export class ProductController {
                 return
             }
 
-            console.log(q)
             const products = await getProductsBySearch(q as string)
             res.status(200).json(products)
 

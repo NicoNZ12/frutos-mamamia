@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, saveUser } from "../services/userService";
+import { getAllUsers, getUsersBySearch, saveUser } from "../services/userService";
 import User from "../model/userModel";
 
 export class UserController {
@@ -14,6 +14,24 @@ export class UserController {
         }catch(error){
             const err = error as Error
             res.status(500).json({ message: "Error al obtener los usuarios.", error: err.message })
+        }
+    }
+
+    static async searchUsers(req: Request, res: Response): Promise<void> {
+        try{
+            const { q } = req.query
+
+            if(!q){
+                res.status(400).json({ message: "El parámetro de búsqueda 'q' es obligatorio." })
+                return
+            }
+
+            const users = await getUsersBySearch(q as string)
+            res.status(200).json(users)
+
+        }catch(error){
+            const err = error as Error
+            res.status(500).json({ message: "Error al buscar usuarios.", error: err.message })
         }
     }
 

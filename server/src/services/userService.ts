@@ -22,6 +22,21 @@ export const getAllUsers = async (page: number, limit: number) => {
     }
 }
 
+export const getUsersBySearch = async (search: string) => {
+    const regex = new RegExp(
+        search.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'
+    ) 
+
+    const users = await User.find({
+        $or: [
+            { name: { $regex: regex } },
+            { lastName: { $regex: regex } }
+        ]
+    })
+
+    return users
+}
+
 export const saveUser = async (newUser: IUser) => {
     const user = new User(newUser)
     await user.save()
