@@ -8,7 +8,8 @@ export interface IUser extends Document {
     password: string,
     address?: string,
     phoneNumber?: string,
-    isAdmin: boolean
+    isAdmin: boolean,
+    comparePassword(password: string, hashedPassword: string): Promise<boolean>
 }
 
 const userSchema = new Schema({
