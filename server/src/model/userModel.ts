@@ -1,4 +1,5 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, Model, model, Schema } from "mongoose";
+import { hash, genSalt, compare } from "bcrypt";
 
 export interface IUser extends Document {
     name: string,
@@ -51,5 +52,20 @@ const userSchema = new Schema({
     versionKey: false
 })
 
-const userModel = model<IUser>("Usuario", userSchema)
+interface IUserModel extends Model<IUser> {
+  hashPassword(password: string): Promise<string>
+}
+
+userSchema.statics.hashPassword = async function(password: string): Promise<string> {
+    const salt = await genSalt(10)
+    const hashedPassword = await hash(password, salt)
+    return hashedPassword
+}
+
+userSchema.methods.comparePassword = async function(password: string, hashedPassword: string): Promise<boolean> {
+    const isMatch = await compare(password, hashedPassword)
+    return isMatch
+}
+
+const userModel = model<IUser, IUserModel>("Usuario", userSchema)
 export default userModel

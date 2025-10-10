@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getAllUsers, saveUser } from "../services/userService";
+import User from "../model/userModel";
 
 export class UserController {
     static async getUsers(req: Request, res: Response): Promise<void> {
@@ -25,12 +26,14 @@ export class UserController {
                 return
             }
 
+            const hashedPassword = await User.hashPassword(password)
+
             const newUser = {
+                ...req.body,
                 name,
                 lastName,
                 email,
-                password,
-                ...req.body
+                password: hashedPassword,
             }
 
             const savedUser = await saveUser(newUser)
