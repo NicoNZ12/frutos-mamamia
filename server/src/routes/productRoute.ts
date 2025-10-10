@@ -3,6 +3,7 @@ import { ProductController } from "../controllers/productController"
 
 const router = Router()
 
+router.get("/search", ProductController.searchProducts)
 router.get("/", ProductController.getProducts)
 router.get("/:id", ProductController.getProduct)
 router.post("/", ProductController.addProduct)

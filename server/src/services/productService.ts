@@ -37,6 +37,18 @@ export const getProductsByCategoryName = async (categoryName: string) => {
     return filteredProducts
 }
 
+export const getProductsBySearch = async (search: string) => {
+    const regex = new RegExp(
+        search.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'
+    )
+
+    const products = await Product.find({
+        name: { $regex: regex }
+    })
+
+    return products
+}
+
 export const saveProduct = async (product: IProduct) => {
     const newProduct = new Product(product)
     await newProduct.save()
