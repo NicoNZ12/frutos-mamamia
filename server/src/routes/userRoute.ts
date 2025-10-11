@@ -5,7 +5,6 @@ const router = Router()
 
 router.get("/search", UserController.searchUsers)
 router.get("/", UserController.getUsers)
-
-//TODO: ruta para getUserById
+router.get("/:id", UserController.getUserById)
 
 export default router
