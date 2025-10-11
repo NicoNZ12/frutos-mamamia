@@ -2,8 +2,15 @@ import Order, { INewOrder } from "../model/orderModel";
 import User from "../model/userModel";
 import Product from "../model/productModel";
 
-export const getAllOrders = async () => {
-    const orders = await Order.find().populate("userId", "name email address phoneNumber").populate("products.productId", "name price")
+export const getAllOrders = async (status: string) => {
+
+    const filter: {status?: string} = {}
+
+    if(status){
+        filter.status = status
+    }
+
+    const orders = await Order.find(filter).populate("userId", "name email address phoneNumber").populate("products.productId", "name price")
     return orders
 }
 

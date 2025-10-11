@@ -3,9 +3,11 @@ import { addOrder, getAllOrders, getOrderById, updateStatus } from "../services/
 import { INewOrder } from "../model/orderModel"
 
 export class OrderController {
-    static async getOrders(_req: Request, res: Response): Promise<void> {
+    static async getOrders(req: Request, res: Response): Promise<void> {
         try{
-            const orders = await getAllOrders()
+            const { status } = req.query
+   
+            const orders = await getAllOrders(status as string)
             res.status(200).json(orders)
 
         }catch(error){
