@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllUsers, getUsersBySearch } from "../services/userService";
+import { getAllUsers, getUser, getUsersBySearch } from "../services/userService";
 export class UserController {
     static async getUsers(req: Request, res: Response): Promise<void> {
         try{
@@ -12,6 +12,31 @@ export class UserController {
         }catch(error){
             const err = error as Error
             res.status(500).json({ message: "Error al obtener los usuarios.", error: err.message })
+        }
+    }
+
+    static async getUserById(req: Request, res: Response): Promise<void> {
+        try{
+            const { id } = req.params
+
+            if(!id){
+                res.status(400).json({ message: "El ID es obligatorio." })
+                return
+            }
+
+            const user = await getUser(id)
+            console.log("USUARIO:", user)
+
+            if(!user){
+                res.status(404).json({ message: "No se encontró usuario con ese ID" })
+                return
+            }
+
+            res.status(200).json(user)
+
+        }catch(error){
+            const err = error as Error
+            res.status(500).json({ message: "Error al obtener el usuario.", error: err.message})
         }
     }
 

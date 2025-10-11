@@ -22,6 +22,11 @@ export const getAllUsers = async (page: number, limit: number) => {
     }
 }
 
+export const getUser = async (id: string) => {
+    const user = await User.findById(id).select("-password")
+    return user
+}
+
 export const getUsersBySearch = async (search: string) => {
     const regex = new RegExp(
         search.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'
