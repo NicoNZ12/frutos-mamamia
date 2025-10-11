@@ -72,3 +72,12 @@ export const addOrder = async (order: INewOrder) => {
 
     return newOrder
 }
+
+export const updateStatus = async (id: string, status: string) => {
+    const updatedOrder = await Order.findOneAndUpdate(
+        { _id: id },     
+        { status },        
+        { new: true, runValidators: true }    
+    )
+    return updatedOrder
+}

@@ -6,6 +6,6 @@ const router = Router()
 router.get("/", OrderController.getOrders)
 router.get("/:orderId", OrderController.getOrder)
 router.post("/", OrderController.createOrder)
-// router.put("/:id")
+router.put("/:orderId", OrderController.updateOrderStatus)
 
 export default router
