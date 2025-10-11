@@ -5,6 +5,7 @@ export interface INewOrder {
     userId: string,
     products: { 
         productId: string,
+        name: string,
         quantity: number,
         price: number
     }[],
@@ -31,14 +32,19 @@ export interface IOrder extends Document {
 const orderSchema = new Schema({
     userId: { 
         type: Schema.Types.ObjectId, 
-        ref: 'User', 
+        ref: 'Usuario',  
         required: true 
     },
     products: [{
         productId: { 
             type: Schema.Types.ObjectId,
-            ref: 'Product',
+            ref: 'Producto', 
             required: true
+        },
+        name: {
+            type: String,
+            required: true,
+            trim: true,
         },
         quantity: {
             type: Number,

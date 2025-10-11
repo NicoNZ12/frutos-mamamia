@@ -3,12 +3,12 @@ import User from "../model/userModel";
 import Product from "../model/productModel";
 
 export const getAllOrders = async () => {
-    const orders = await Order.find()
+    const orders = await Order.find().populate("userId", "name email address phoneNumber").populate("products.productId", "name price")
     return orders
 }
 
 export const getOrderById = async (id: string) => {
-    const order = await Order.findById(id)
+    const order = await Order.findById(id).populate("userId", "name email address phoneNumber").populate("products.productId", "name price")
     return order
 }
 
@@ -27,6 +27,7 @@ export const addOrder = async (order: INewOrder) => {
 
         productsInOrder.push({
             productId: product._id,
+            name: product.name,
             price: product.price,
             quantity: item.quantity
         })
