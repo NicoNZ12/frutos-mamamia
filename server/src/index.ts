@@ -9,7 +9,7 @@ import orderRoute from './routes/orderRoute'
 
 dotenv.config()
 
-const PORT = process.env.SERVER_PORT || 3000
+const PORT = process.env.SERVER_PORT || 4000
 
 //config
 const app = express()
