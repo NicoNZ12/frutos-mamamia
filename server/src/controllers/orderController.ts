@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { addOrder, getAllOrders, getOrderById, updateStatus } from "../services/orderService"
+import { addOrder, getAllOrders, getOrderById, getOrdersByUserId, updateStatus } from "../services/orderService"
 import { INewOrder } from "../model/orderModel"
 
 export class OrderController {
@@ -38,6 +38,24 @@ export class OrderController {
         }catch(error){
             const err = error as Error
             res.status(500).json({ message: "Error al obtener el pedido.", error: err.message })
+        }
+    }
+
+    static async getOrdersByUser(req: Request, res: Response): Promise<void> {
+        try{
+            const { userId } = req.params
+
+            if(!userId){
+                res.status(400).json({ message: "El ID del usuario es obligatorio." })
+                return
+            }
+
+            const orders = await getOrdersByUserId(userId)
+            res.status(200).json(orders)
+            
+        }catch(error){
+            const err = error as Error
+            res.status(500).json({ message: "Error al obtener los pedidos del usuario.", error: err.message })
         }
     }
 

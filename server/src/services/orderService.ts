@@ -19,6 +19,12 @@ export const getOrderById = async (id: string) => {
     return order
 }
 
+export const getOrdersByUserId= async (id: string) => {
+    //obtener todas las ordenes del usuario. El usuario que hace los pedidos solo puede ver sus propios pedidos
+    const orders = await Order.find({ userId: id }).populate("products.productId", "name price")
+    return orders
+}
+
 export const addOrder = async (order: INewOrder) => {
     // 1. crear el pedido
 
