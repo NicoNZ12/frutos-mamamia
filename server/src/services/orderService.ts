@@ -15,13 +15,12 @@ export const getAllOrders = async (status: string) => {
 }
 
 export const getOrderById = async (id: string) => {
-    const order = await Order.findById(id).populate("userId", "name email address phoneNumber").populate("products.productId", "name price")
+    const order = await Order.findById(id).populate("userId", "name email address phoneNumber").populate("products.productId", "name price").lean()
     return order
 }
 
 export const getOrdersByUserId= async (id: string) => {
-    //obtener todas las ordenes del usuario. El usuario que hace los pedidos solo puede ver sus propios pedidos
-    const orders = await Order.find({ userId: id }).populate("products.productId", "name price")
+    const orders = await Order.find({ userId: id }).populate("products.productId", "name price").lean()
     return orders
 }
 
