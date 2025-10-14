@@ -8,7 +8,7 @@ router.get("/search", ProductController.searchProducts)
 router.get("/", ProductController.getProducts)
 router.get("/:id", ProductController.getProduct)
 router.post("/", upload.single("image"), ProductController.addProduct)
-router.put("/:id", ProductController.editProduct)
+router.put("/:id", upload.single("image"), ProductController.editProduct)
 router.delete("/:id", ProductController.deleteProduct)
 
 export default router
