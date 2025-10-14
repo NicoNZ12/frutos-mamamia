@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { getAllProducts, getOneProduct, removeProduct, saveProduct, updateProduct, getProductsByCategoryName, getProductsBySearch } from "../services/productService"
 import { IProduct } from "../model/productModel"
+import { uploadToCloudinary } from "../utils/uploadImage"
 
 export class ProductController {
     static async getProducts(req: Request, res: Response): Promise<void> {
@@ -70,11 +71,24 @@ export class ProductController {
 
     static async addProduct(req: Request, res: Response): Promise<void> {
         try {
-            const { name, description, price, category, type, imgUrl } = req.body
+            const { name, description, price, category, type } = req.body
+            const image = req.file
 
-            if (!name || !price || !category) {
+            if (!name || !price || !category ) {
                 res.status(400).json({ message: "Campos obligatorios faltantes." })
                 return
+            }
+
+            let imgUrl = ""
+
+            if(image){
+                try{
+                    const uploadResult = await uploadToCloudinary(image.buffer, "frutos-mamamia")
+                    imgUrl = uploadResult.secure_url
+                }catch(uploadResult){
+                    res.status(500).json({ message: "Error al subir la imagen" })
+                    return
+                }
             }
 
             const newProduct = {
@@ -82,8 +96,8 @@ export class ProductController {
                 description,
                 price,
                 category,
-                type,
-                imgUrl
+                type: type || "simple",
+                imgUrl: imgUrl || ""
             }
 
             const savedProduct = await saveProduct(newProduct as IProduct)
@@ -99,13 +113,14 @@ export class ProductController {
     static async editProduct(req: Request, res: Response): Promise<void> {
         try {
             const productID = req.params.id
+            const image = req.file
 
             if (!productID) {
                 res.status(400).json({ message: "El ID del producto es obligatorio." })
                 return
             }
             
-            if (Object.keys(req.body).length === 0) {
+            if (Object.keys(req.body).length === 0 && !image) {
                 res.status(400).json({ message: "Debes enviar al menos un campo para actualizar." })
                 return
             }
@@ -116,6 +131,17 @@ export class ProductController {
 
             if (updateData.name) {
                 updateData.name = updateData.name.toUpperCase()
+            }
+
+            if(image){
+                try{
+                    const uploadResult = await uploadToCloudinary(image.buffer, "frutos-mamamia")
+                    updateData.imgUrl = uploadResult.secure_url
+
+                }catch(uploadError){
+                    res.status(500).json({ message: "Error al subir la imagen" })
+                    return 
+                }
             }
 
             const updatedProduct = await updateProduct(productID, updateData)
