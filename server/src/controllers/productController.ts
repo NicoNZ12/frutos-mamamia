@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { getAllProducts, getOneProduct, removeProduct, saveProduct, updateProduct, getProductsByCategoryName, getProductsBySearch } from "../services/productService"
 import { IProduct } from "../model/productModel"
+import { uploadToCloudinary } from "../utils/uploadImage"
 
 export class ProductController {
     static async getProducts(req: Request, res: Response): Promise<void> {
@@ -70,11 +71,23 @@ export class ProductController {
 
     static async addProduct(req: Request, res: Response): Promise<void> {
         try {
-            const { name, description, price, category, type, imgUrl } = req.body
+            const { name, description, price, category, type } = req.body
+            const image = req.file
 
-            if (!name || !price || !category) {
+            if (!name || !price || !category ) {
                 res.status(400).json({ message: "Campos obligatorios faltantes." })
                 return
+            }
+
+            let imgUrl = ""
+
+            if(image){
+                try{
+                    const uploadResult = await uploadToCloudinary(image.buffer, "frutos-mamamia")
+                    imgUrl = uploadResult.secure_url
+                }catch(uploadResult){
+                    res.status(500).json({ message: "Error al subir la imagen" })
+                }
             }
 
             const newProduct = {
@@ -82,8 +95,8 @@ export class ProductController {
                 description,
                 price,
                 category,
-                type,
-                imgUrl
+                type: type || "simple",
+                imgUrl: imgUrl || ""
             }
 
             const savedProduct = await saveProduct(newProduct as IProduct)

@@ -35,7 +35,6 @@ const productoSchema = new Schema({
     type: {
         type: String,
         enum: ["simple", "promocion"],
-        required: [true, "El tipo de producto es obligatorio."]
     },
     imgUrl: {
         type: String,
