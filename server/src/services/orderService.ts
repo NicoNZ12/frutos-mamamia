@@ -1,6 +1,7 @@
 import Order, { INewOrder } from "../model/orderModel";
 import User from "../model/userModel";
 import Product from "../model/productModel";
+import { calculatePrice } from "../utils/calculatePrice";
 
 export const getAllOrders = async (status: string) => {
 
@@ -37,6 +38,8 @@ export const addOrder = async (order: INewOrder) => {
             return false
         }
 
+        const totalPricePerProduct = calculatePrice(product, item.quantity)
+ 
         productsInOrder.push({
             productId: product._id,
             name: product.name,
@@ -44,7 +47,7 @@ export const addOrder = async (order: INewOrder) => {
             quantity: item.quantity
         })
 
-        totalPrice += product.price * item.quantity
+        totalPrice += totalPricePerProduct
     }
 
     const newOrder = new Order({
