@@ -1,4 +1,4 @@
-import { IProduct } from "../model/productModel";
+import { IProduct } from "../model/productModel"
 
 export const calculatePrice = (product: IProduct, quantity: number): number => {
     const { price, unitPrice } = product
@@ -8,14 +8,14 @@ export const calculatePrice = (product: IProduct, quantity: number): number => {
 
     if(unitPrice === "un" || unitPrice === "lt"){
         basePricePerUnit = price
-    }
 
-    if(unitPrice === "kg"){
+    } else if(unitPrice === "kg"){
         basePricePerUnit = price / 1000
-    }
 
-    //para productos donde el precio es por 100gr
-    basePricePerUnit = price / 100
+    } else if(unitPrice === "gr"){
+        //para productos donde el precio es por 100gr
+        basePricePerUnit = price / 100
+    }
 
     const totalPrice = basePricePerUnit * quantity
 
