@@ -7,6 +7,8 @@ export interface IProduct extends Document {
     category: ObjectId,
     type: string
     imgUrl?: string
+    unitPrice: string
+    quantityStep: number
 }
 
 const productoSchema = new Schema({
@@ -39,6 +41,16 @@ const productoSchema = new Schema({
     imgUrl: {
         type: String,
         trim: true,
+    },
+    unitPrice: {
+        type: String,
+        required: [true, "La unidad por precio es obligatoria."],
+        enum: ["kg", "gr", "un", "lt"]
+    },
+    quantityStep: {
+        type: Number,
+        enum: [25, 1],
+        required: true
     }
 }, {
     versionKey: false

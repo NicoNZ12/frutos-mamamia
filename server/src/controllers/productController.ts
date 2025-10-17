@@ -71,10 +71,10 @@ export class ProductController {
 
     static async addProduct(req: Request, res: Response): Promise<void> {
         try {
-            const { name, description, price, category, type } = req.body
+            const { name, description, price, category, type, unitPrice } = req.body
             const image = req.file
 
-            if (!name || !price || !category ) {
+            if (!name || !price || !category || !unitPrice) {
                 res.status(400).json({ message: "Campos obligatorios faltantes." })
                 return
             }
@@ -91,12 +91,23 @@ export class ProductController {
                 }
             }
 
+            let quantityStep = 0
+
+            if(unitPrice === "kg" || unitPrice === "gr"){
+                quantityStep = 25
+            }else{
+                quantityStep = 1
+            }
+
+
             const newProduct = {
                 name: name.toUpperCase(),
                 description,
                 price,
                 category,
                 type: type || "simple",
+                unitPrice,
+                quantityStep,
                 imgUrl: imgUrl || ""
             }
 
