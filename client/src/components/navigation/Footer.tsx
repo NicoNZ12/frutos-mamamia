@@ -1,6 +1,7 @@
 import InstagramIcon from '@mui/icons-material/Instagram'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
+import { Link } from 'react-router'
 
 const Footer = () => {
    return (
@@ -19,9 +20,9 @@ const Footer = () => {
             <h4 className="text-sm font-semibold">Comprar</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/products" className="hover:text-primary transition-colors text-secondary-400">
+                <Link to="/" className="hover:text-primary transition-colors text-secondary-400">
                   Todos los Productos
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -30,14 +31,14 @@ const Footer = () => {
             <h4 className="text-sm font-semibold">Información</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/about" className="hover:text-primary transition-colors text-secondary-400">
+                <Link to="/nosotros" className="hover:text-primary transition-colors text-secondary-400">
                   Sobre Nosotros
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/contact" className="hover:text-primary transition-colors text-secondary-400">
+                <Link to="/contacto" className="hover:text-primary transition-colors text-secondary-400">
                   Contacto
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
