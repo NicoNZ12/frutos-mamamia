@@ -3,7 +3,7 @@ import { NavLink, Link } from 'react-router';
 
 const NavBar = () => {
   return (
-    <nav className="sticky top-0 z-50 w-full border-b-2 border-dark-300 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b-2 border-dark-300 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
