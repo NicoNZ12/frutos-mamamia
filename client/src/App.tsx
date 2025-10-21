@@ -1,7 +1,13 @@
+// import Contact from "./pages/Contact"
+// import Home from "./pages/Home"
+
+import AboutUs from "./pages/AboutUs"
 
 const App = () => {
   return (
-    <h1>Frutos Mamamía</h1>
+    // <Home />
+    // <Contact />
+    <AboutUs />
   )
 }
 
