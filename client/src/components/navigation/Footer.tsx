@@ -1,6 +1,6 @@
 import InstagramIcon from '@mui/icons-material/Instagram'
-import FacebookIcon from '@mui/icons-material/Facebook';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import FacebookIcon from '@mui/icons-material/Facebook'
+import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 
 const Footer = () => {
    return (
@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-primary">Frutos Mamamia</h3>
             <p className="text-sm leading-relaxed text-secondary-400">
-              La naturaleza en tus manos. Frutos secos de la más alta calidad.
+              La naturaleza en tus manos. Frutos secos y deshidratados de la más alta calidad.
             </p>
           </div>
 
@@ -48,19 +48,22 @@ const Footer = () => {
             <h4 className="text-sm font-semibold">Síguenos</h4>
             <div className="flex gap-3">
               <a
-                href="#"
+                href="https://www.facebook.com/frutosmamamia?locale=es_LA"
+                target='_blank'
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary-50 hover:bg-primary hover:text-white transition-colors"
               >
                 <FacebookIcon className='w-4 h-4'/>
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/frutos_mamamia/"
+                target='_blank'
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary-50 hover:bg-primary hover:text-white transition-colors"
               >
                 <InstagramIcon className='w-4 h-4'/>
               </a>
               <a
-                href="#"
+                href="https://www.whatsapp.com/channel/0029Vag8zRt5fM5b0lnrOa0T"
+                target='_blank'
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary-50 hover:bg-primary hover:text-white transition-colors"
               >
                 <WhatsAppIcon className='w-4 h-4'/>
