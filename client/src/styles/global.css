@@ -51,3 +51,7 @@
 .nav-links--mobile{
   @apply block px-3 py-2 hover:text-primary transition-colors
 }
+
+.footer-links{
+  @apply hover:text-primary transition-colors text-secondary-400
+}
