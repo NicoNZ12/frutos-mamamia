@@ -27,7 +27,7 @@ const NavBar = () => {
               Inicio
             </NavLink>
             <NavLink
-              to="/"
+              to="/productos"
               className="nav-links"
             >
               Productos

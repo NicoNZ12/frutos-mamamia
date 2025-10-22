@@ -6,10 +6,10 @@ import { uploadToCloudinary } from "../utils/uploadImage"
 export class ProductController {
     static async getProducts(req: Request, res: Response): Promise<void> {
         try {
-            let { category, page, limit } = req.query     
+            let { category, page, limit } = req.query
             
             const pageNum = parseInt(page as string) || 1
-            const limitNum = parseInt(limit as string) || 10
+            const limitNum = parseInt(limit as string) || 15
 
             if (typeof category === "string") {
                 const products = await getProductsByCategoryName(category)

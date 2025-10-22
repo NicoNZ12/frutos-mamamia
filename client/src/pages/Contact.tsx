@@ -1,5 +1,3 @@
-import Footer from "../components/navigation/Footer"
-import NavBar from "../components/navigation/NavBar"
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import fotoContacto from '../assets/imgs/foto-contacto.webp'
 

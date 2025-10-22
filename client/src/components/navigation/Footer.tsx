@@ -20,7 +20,7 @@ const Footer = () => {
             <h4 className="text-sm font-semibold">Comprar</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/" className="footer-links">
+                <Link to="/productos" className="footer-links">
                   Todos los Productos
                 </Link>
               </li>
