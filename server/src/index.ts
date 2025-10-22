@@ -6,6 +6,7 @@ import productRoute from './routes/productRoute'
 import userRoute from './routes/userRoute'
 import authRoute from './routes/authRoute'
 import orderRoute from './routes/orderRoute'
+import cors from 'cors'
 
 dotenv.config()
 
@@ -16,6 +17,11 @@ const app = express()
 
 //middlewares
 app.use(express.json())
+app.use(cors({
+    origin: process.env.FRONTEND_URL || "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+}))
 
 //endpoint inicial
 app.get("/", (_req, res) => {

@@ -6,7 +6,6 @@ import fotoContacto from '../assets/imgs/foto-contacto.webp'
 const Contact = () => {
   return (
     <>
-        <NavBar />
         <main className="min-h-screen flex items-center justify-center py-4 px-4">
             <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 
@@ -21,7 +20,7 @@ const Contact = () => {
                 <div className="order-1 lg:order-2">
                     <div className="text-center lg:text-left mb-12">
                         <h2 className="text-3xl font-bold text-primary mb-4">¿Tenés alguna duda?</h2>
-                        <h3 className="text-xl text-secondary-400">¡No dudes en escribirnos!</h3>
+                        <h3 className="text-xl text-dark-500/80">¡No dudes en escribirnos!</h3>
                     </div>
 
                     <div className="flex flex-col gap-6">
@@ -52,7 +51,6 @@ const Contact = () => {
                 </div>
             </div>
         </main>
-        <Footer />
     </>
   )
 }
