@@ -1,6 +1,66 @@
-import { Link } from "react-router"
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router"
+import { handleAuth } from "../api/auth/handle-auth"
+import toast from "react-hot-toast"
+import Cookies from 'js-cookie'
 
 const Login = () => {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [rememberMe, setRememberMe] = useState(false);
+    const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate()
+    const url = import.meta.env.VITE_SERVER_URL + "auth/login"
+
+    useEffect(() => {
+        const savedEmail = localStorage.getItem("email");
+        if (savedEmail) {
+            setEmail(savedEmail);
+            setRememberMe(true);
+        }
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        const user = {
+            email,
+            password,
+        }
+
+        setLoading(true)
+
+        try{
+            if(password.length < 8) {
+                throw new Error("La contraseña debe tener al menos 6 caracteres");
+            }
+
+            const result = await handleAuth(url, user)
+
+            if(result.success){
+                Cookies.set('token', result.result.token, { expires: 1 });
+                toast.success("¡Inicio de sesión exitoso!")
+                navigate("/", {replace: true})
+
+                if(rememberMe) {
+                    localStorage.setItem("email", email);
+                }else {
+                    localStorage.removeItem("email");
+                }
+
+            }else {
+                toast.error(result.result.error || result.result.message || "Error al iniciar sesión")
+            }
+        }catch(error){
+            const err = error as Error
+            toast.error(err.message)
+        } finally {
+            setLoading(false)
+        }
+
+    }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -10,7 +70,7 @@ const Login = () => {
         </div>
         
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-secondary mb-2">
                 Email
@@ -19,6 +79,8 @@ const Login = () => {
                 type="email" 
                 id="email" 
                 name="email" 
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 required 
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors placeholder:text-secondary-300"
                 placeholder="tu@email.com"
@@ -33,6 +95,8 @@ const Login = () => {
                 type="password" 
                 id="password" 
                 name="password" 
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 required 
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors placeholder:text-secondary-300"
                 placeholder="••••••••"
@@ -44,7 +108,9 @@ const Login = () => {
                 <input 
                   id="remember-me" 
                   name="remember-me" 
-                  type="checkbox" 
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={e => setRememberMe(e.target.checked)}
                   className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-secondary-400">
@@ -54,10 +120,15 @@ const Login = () => {
             </div>        
 
             <button 
-              type="submit"
-              className="w-full bg-primary text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-600 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
+                type="submit"
+                disabled={loading}
+                className={`w-full py-3 px-4 rounded-lg font-semibold focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors ${
+                        loading 
+                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                        : 'bg-primary text-white hover:bg-primary-600'
+                }`}
             >
-              Iniciar Sesión
+                {loading ? 'iniciando sesión...' : 'Iniciar Sesión'}
             </button>
           </form>
           

@@ -5,7 +5,12 @@ interface IRegistro{
     password: string
 }
 
-export const registerFetch = async (url: string, data: IRegistro) => {
+interface ILogin{
+    email: string,
+    password: string
+}
+
+export const handleAuth= async (url: string, data: IRegistro | ILogin) => {
     try {
        
         const response = await fetch(url, {

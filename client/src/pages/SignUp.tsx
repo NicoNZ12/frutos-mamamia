@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router"
-import { registerFetch } from "../api/handle-http"
+import { handleAuth } from "../api/auth/handle-auth"
 import toast from "react-hot-toast"
 
 const SignUp = () => {
@@ -52,12 +52,12 @@ const SignUp = () => {
                 password
             }
 
-            const result = await registerFetch(url, newAccount)
+            const result = await handleAuth(url, newAccount)
                         
             if (result.success) {
                 toast.success("¡Cuenta creada exitosamente!")
                 clearForm()
-                navigate("/login")
+                navigate("/login", {replace: true})
                 
             } else {
                 toast.error(result.result.error || "Error al crear la cuenta")
