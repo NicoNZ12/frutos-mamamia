@@ -43,3 +43,11 @@
   --color-black: #231F20;
   --color-gray: #2E2E2E;
 }
+
+.nav-links{
+  @apply text-sm font-medium hover:text-primary transition-colors
+}
+
+.nav-links--mobile{
+  @apply block px-3 py-2 hover:text-primary transition-colors
+}
