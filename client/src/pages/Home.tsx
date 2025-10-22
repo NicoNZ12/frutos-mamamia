@@ -8,8 +8,6 @@ import EastIcon from '@mui/icons-material/East';
 const Home = () => {
   return (
     <>
-        <NavBar />     
-
         <section className="relative h-screen min-h-dvh overflow-hidden">
           <div className="absolute inset-0 w-full h-full">
             <img 
@@ -65,8 +63,6 @@ const Home = () => {
             </div>
           </div>
         </section>
-
-        <Footer />
     </>
   )
 }

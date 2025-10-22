@@ -6,7 +6,6 @@ import fotoContacto from '../assets/imgs/foto-contacto.webp'
 const Contact = () => {
   return (
     <>
-        <NavBar />
         <main className="min-h-screen flex items-center justify-center py-4 px-4">
             <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 
@@ -52,7 +51,6 @@ const Contact = () => {
                 </div>
             </div>
         </main>
-        <Footer />
     </>
   )
 }

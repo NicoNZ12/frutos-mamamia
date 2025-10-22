@@ -8,8 +8,6 @@ import { products } from "../constants/features"
 const AboutUs = () => {
   return (
     <>
-        <NavBar />
-
         <main className="min-h-screen py-16 px-4">
             <div className="max-w-6xl mx-auto">
                 {/* Hero Section */}
@@ -76,7 +74,6 @@ const AboutUs = () => {
             </div>
         </main>
         
-        <Footer />
     </>
   )
 }

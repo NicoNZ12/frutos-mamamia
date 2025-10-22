@@ -5,19 +5,27 @@ import Contact from '../pages/Contact.tsx'
 import NotFound from '../pages/NotFound.tsx'
 import Login from '../pages/Login.tsx'
 import SignUp from '../pages/SignUp.tsx'
+import Layout from '../layout/Layout.tsx'
 
 const router = createBrowserRouter([
     {
         path: '/',
-        Component: Home
-    },
-    {
-        path: "/nosotros",
-        Component: AboutUs
-    },
-    {
-        path: "/contacto",
-        Component: Contact
+        Component: Layout,
+        errorElement: <NotFound />,
+        children: [
+            {
+                index: true,    
+                Component: Home
+            },
+            {
+                path: "/nosotros",
+                Component: AboutUs
+            },
+            {
+                path: "/contacto",
+                Component: Contact
+            }
+        ]
     },
     {
         path: "/login",
@@ -26,10 +34,6 @@ const router = createBrowserRouter([
     {
         path: "/registrarse",
         Component: SignUp
-    },
-    {
-        path: '*',
-        Component: NotFound
     }
 ])
 
