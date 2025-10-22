@@ -13,6 +13,12 @@ export class AuthController {
                 return
             }
 
+            const existingUser = await User.findOne({ email: email })
+            if(existingUser){
+                res.status(400).json({ message: "Error al registrar el usuario.", error: "El email ya está registrado" })
+                return
+            }
+
             const hashedPassword = await User.hashPassword(password)
 
             const newUser = {
