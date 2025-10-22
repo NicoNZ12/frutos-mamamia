@@ -23,9 +23,9 @@ export class AuthController {
                 password: hashedPassword,
             }
 
-            const savedUser = await saveUser(newUser)
+            await saveUser(newUser)
 
-            res.status(201).json({ message: "Usuario registrado correctamente.", payload: savedUser })
+            res.status(201).json({ message: "Usuario registrado correctamente.", payload: {name, lastName,email} })
 
         }catch(error){
             const err = error as Error
