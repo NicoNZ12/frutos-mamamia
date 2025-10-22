@@ -3,14 +3,18 @@ import { Link, useNavigate } from "react-router"
 import { handleAuth } from "../api/auth/handle-auth"
 import toast from "react-hot-toast"
 import Cookies from 'js-cookie'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate()
+
     const url = import.meta.env.VITE_SERVER_URL + "auth/login"
 
     useEffect(() => {
@@ -89,19 +93,34 @@ const Login = () => {
             
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-secondary mb-2">
-                Contraseña
+                  Contraseña
               </label>
-              <input 
-                type="password" 
-                id="password" 
-                name="password" 
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required 
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors placeholder:text-secondary-300"
-                placeholder="••••••••"
-              />
-            </div>
+              <div className="relative">
+                  <input 
+                      type={showPassword ? "text" : "password"} 
+                      id="password" 
+                      name="password" 
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      required 
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors placeholder:text-secondary-300"
+                      placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                    title={showPassword ? "Ocultar" : "Mostrar"}
+                  >
+                    {showPassword ? (
+                        <VisibilityIcon className="h-5 w-5" />
+
+                    ) : (
+                        <VisibilityOffIcon className="h-5 w-5" />
+                    )}
+                  </button>
+              </div>
+            </div>  
             
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -111,7 +130,7 @@ const Login = () => {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={e => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-secondary-400">
                   Recordarme
@@ -122,13 +141,13 @@ const Login = () => {
             <button 
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 px-4 rounded-lg font-semibold focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors ${
+                className={`w-full py-3 px-4 rounded-lg font-semibold focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors cursor-pointer ${
                         loading 
                         ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
                         : 'bg-primary text-white hover:bg-primary-600'
                 }`}
             >
-                {loading ? 'iniciando sesión...' : 'Iniciar Sesión'}
+                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </button>
           </form>
           
