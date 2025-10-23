@@ -66,7 +66,7 @@ const NavBar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-foreground hover:text-primary hover:bg-gray-100"
+              className="inline-flex items-center justify-center p-2 rounded-md hover:text-primary hover:bg-gray-100"
             >
               {isMenuOpen ? (
                 <CloseIcon className="h-6 w-6" />
