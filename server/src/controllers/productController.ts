@@ -12,7 +12,7 @@ export class ProductController {
             const limitNum = parseInt(limit as string) || 15
 
             if (typeof category === "string") {
-                const products = await getProductsByCategoryName(category)
+                const products = await getProductsByCategoryName(category, pageNum, limitNum)
                 res.status(200).json(products)
                 return
             }

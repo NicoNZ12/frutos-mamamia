@@ -56,7 +56,7 @@ const NavBar = () => {
 
             <NavLink
               to="/registrarse"
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-400 transition-colors"
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
             >
               Registrarse
             </NavLink>
@@ -122,7 +122,7 @@ const NavBar = () => {
                 </NavLink>
                 <NavLink 
                   to="/registrarse" 
-                  className="block mx-3 my-2 px-3 py-2 bg-primary text-white text-center rounded-md hover:bg-primary-400 transition-colors" 
+                  className="block mx-3 my-2 px-3 py-2 bg-primary text-white text-center rounded-md hover:bg-primary-600 transition-colors" 
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Registrarse

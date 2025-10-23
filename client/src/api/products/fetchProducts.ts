@@ -1,9 +1,18 @@
-export const fetchProducts = async (category?: string) => {
+export const fetchProducts = async (category?: string, page: number = 1, limit: number = 15) => {
     try {
         let requestUrl = import.meta.env.VITE_SERVER_URL + "productos/"
         
+        const params = new URLSearchParams()
+        
         if (category) {
-            requestUrl += `?category=${encodeURIComponent(category)}`
+            params.append('category', category)
+        }
+        
+        params.append('page', page.toString())
+        params.append('limit', limit.toString())
+        
+        if (params.toString()) {
+            requestUrl += `?${params.toString()}`
         }
 
         const response = await fetch(requestUrl)

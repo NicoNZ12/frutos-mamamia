@@ -16,7 +16,7 @@ export const getAllProducts = async (page: number, limit: number) => {
 
     return {
         totalProducts: products[0].metadata[0] ? products[0].metadata[0].total : 0,
-        totatlPages: products[0].metadata[0] ? Math.ceil(products[0].metadata[0].total / limit) : 0,
+        totalPages: products[0].metadata[0] ? Math.ceil(products[0].metadata[0].total / limit) : 0,
         page,
         limit,
         products: products[0].data
@@ -28,13 +28,51 @@ export const getOneProduct = async (id: string) => {
     return product 
 }
 
-export const getProductsByCategoryName = async (categoryName: string) => {
+export const getProductsByCategoryName = async (categoryName: string, page: number = 1, limit: number = 15) => {
     const category = await Category.findOne({ name: { $regex: new RegExp(`^${categoryName.trim()}$`, "i") }})
     if(!category){
-        return []
+        return {
+            totalProducts: 0,
+            totalPages: 0,
+            page,
+            limit,
+            products: []
+        }
     }
-    const filteredProducts = await Product.find({category: category._id}).populate("category")
-    return filteredProducts
+
+    const products = await Product.aggregate([
+        {
+            $match: { category: category._id }
+        },
+        {
+            $facet: {
+                metadata: [{ $count: "total" }],
+                data: [
+                    { $skip: (page - 1) * limit },
+                    { $limit: limit },
+                    {
+                        $lookup: {
+                            from: "categorias",
+                            localField: "category",
+                            foreignField: "_id",
+                            as: "category"
+                        }
+                    },
+                    {
+                        $unwind: "$category"
+                    }
+                ]    
+            }
+        }
+    ])
+
+    return {
+        totalProducts: products[0].metadata[0] ? products[0].metadata[0].total : 0,
+        totalPages: products[0].metadata[0] ? Math.ceil(products[0].metadata[0].total / limit) : 0,
+        page,
+        limit,
+        products: products[0].data
+    }
 }
 
 export const getProductsBySearch = async (search: string) => {

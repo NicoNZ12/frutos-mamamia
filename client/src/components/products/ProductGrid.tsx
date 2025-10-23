@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import ProductCard from "./ProductCard"
 import { fetchProducts } from "../../api/products/fetchProducts"
+import { PaginationControls } from "../Pagination"
 
 interface IProduct{
     _id: string,
@@ -16,16 +17,30 @@ interface ProductGridProps {
     selectedCategory?: string
 }
 
+interface PaginationData {
+    page: number
+    totalPages: number
+}
+
 const ProductGrid = ({ selectedCategory }: ProductGridProps) => {
     const [products, setProducts] = useState<IProduct[]>([])
+    const [pagination, setPagination] = useState<PaginationData>({
+        page: 1,
+        totalPages: 1,
+    })
     const [loading, setLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
 
     useEffect(() => {
         const getProducts = async () => {
             setLoading(true)
             try {
-                const data = await fetchProducts(selectedCategory)
+                const data = await fetchProducts(selectedCategory, currentPage, 15)
                 setProducts(data.products || data)
+                setPagination({
+                    page: data.page || 1,
+                    totalPages: data.totalPages || 1,
+                })
             } catch (error) {
                 setProducts([])
             } finally {
@@ -34,6 +49,10 @@ const ProductGrid = ({ selectedCategory }: ProductGridProps) => {
         }
 
         getProducts()
+    }, [selectedCategory, currentPage])
+
+    useEffect(() => {
+        setCurrentPage(1)
     }, [selectedCategory])
 
     if (loading) {
@@ -72,6 +91,16 @@ const ProductGrid = ({ selectedCategory }: ProductGridProps) => {
           />
         ))}
       </div>
+      
+      
+        <div className="flex justify-center mt-8">
+          <PaginationControls
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            onPageChange={(_, page) => setCurrentPage(page)}
+          />
+        </div>
+      
     </div>
   )
 }

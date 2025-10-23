@@ -10,7 +10,7 @@ const Product = () => {
       <main className="container mx-auto px-4 py-8">
       
         <div className="text-center mb-8">
-          <h2 className="text-5xl font-bold text-primary mb-2">Nuestros productos</h2>
+          <h2 className="text-5xl font-bold text-primary mb-6">Nuestros productos</h2>
           <h3 className="text-xl text-dark-500/80 max-w-2xl mx-auto">
             Descubre nuestra selección de frutos secos, deshidratados, productos naturales y más...
           </h3>
