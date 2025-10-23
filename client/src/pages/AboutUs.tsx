@@ -1,5 +1,3 @@
-import Footer from "../components/navigation/Footer"
-import NavBar from "../components/navigation/NavBar"
 import logo from '../assets/imgs/logo2.webp'
 import almendras from '../assets/imgs/almendras.webp'
 import cereal from '../assets/imgs/cereal.webp'
@@ -49,7 +47,7 @@ const AboutUs = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                         {
                             products.map(product => (
-                                <div className="text-center">
+                                <div key={product.id} className="text-center">
                                     <div className="bg-primary-100 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                                         <span className="text-2xl">{product.icon}</span>
                                     </div>
