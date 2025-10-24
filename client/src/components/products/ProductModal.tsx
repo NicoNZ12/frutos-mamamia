@@ -1,9 +1,11 @@
 import { useState } from "react"
 import CloseIcon from '@mui/icons-material/Close';
+import { useCart } from '../../context/CartContext'
 
 interface ProductModalProps {
   isOpen: boolean
   onClose: () => void
+  id: string
   name: string
   description?: string
   price: number
@@ -14,6 +16,7 @@ interface ProductModalProps {
 const ProductModal = ({
   isOpen,
   onClose,
+  id,
   name,
   description,
   price,
@@ -21,6 +24,21 @@ const ProductModal = ({
   unitPrice
 }: ProductModalProps) => {
   const [quantity, setQuantity] = useState(1)
+  const { addToCart } = useCart()
+
+  const handleAddToCart = () => {
+    addToCart(
+      {
+        id,
+        name,
+        price,
+        unitPrice,
+        image
+      },
+      quantity
+    )
+    onClose()
+  }
 
   const handleIncrement = () => {
     setQuantity(prev => prev + 1)
@@ -141,7 +159,9 @@ const ProductModal = ({
             </div>
           </div>
 
-          <button className="w-full bg-primary hover:bg-primary-600 text-white font-medium py-3 rounded-lg transition-colors duration-200 hover:shadow-md cursor-pointer">
+          <button 
+            onClick={handleAddToCart}
+            className="w-full bg-primary hover:bg-primary-600 text-white font-medium py-3 rounded-lg transition-colors duration-200 hover:shadow-md cursor-pointer">
             Agregar al carrito - ${(price * quantity).toLocaleString()}
           </button>
         </div>

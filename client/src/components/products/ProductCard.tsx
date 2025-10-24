@@ -11,6 +11,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ 
+  id,
   name, 
   price, 
   description,
@@ -81,6 +82,7 @@ const ProductCard = ({
       <ProductModal
         isOpen={isModalOpen}
         onClose={closeModal}
+        id={id || ''}
         name={name}
         description={description}
         price={price}

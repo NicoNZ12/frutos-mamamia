@@ -3,6 +3,7 @@ import logo from '../../assets/imgs/logo.png';
 import { NavLink, Link } from 'react-router';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import CartIcon from '../cart/CartIcon';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,6 +48,7 @@ const NavBar = () => {
           </div>
 
           <div className='hidden items-center gap-6 md:flex'>
+            <CartIcon />
             <NavLink
               to="/login"
               className="nav-links"  
@@ -92,7 +94,7 @@ const NavBar = () => {
                 Inicio
               </NavLink>
               <NavLink 
-                to="/" 
+                to="/productos" 
                 className="nav-links--mobile" 
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -111,6 +113,13 @@ const NavBar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contacto
+              </NavLink>
+              <NavLink 
+                to="/pedidos" 
+                className="nav-links--mobile" 
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <CartIcon />
               </NavLink>
               <div className="border-t pt-2 mt-2">
                 <NavLink 
