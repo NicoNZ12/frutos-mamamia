@@ -14,7 +14,7 @@ export const calculatePrice = (product: IProduct, quantity: number): number => {
 
     } else if(unitPrice === "gr"){
         //para productos donde el precio es por 100gr
-        basePricePerUnit = price / 100
+        basePricePerUnit = price //por el momento solo se puede comprar de a 100gr
     }
 
     const totalPrice = basePricePerUnit * quantity
