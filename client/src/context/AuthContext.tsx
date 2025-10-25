@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactNode, createContext, useContext } from "react"
 import Cookies from "js-cookie"
+import { useCart } from "./CartContext"
 
 interface IAuthContext {
     token: string | null
@@ -17,7 +18,6 @@ const authContext = createContext<IAuthContext | undefined>(undefined)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null)
 
-    
     useEffect(() => {
         const token = Cookies.get("token")
         if (token) {
