@@ -1,6 +1,5 @@
 import { useState, useEffect, type ReactNode, createContext, useContext } from "react"
 import Cookies from "js-cookie"
-import { useCart } from "./CartContext"
 
 interface IAuthContext {
     token: string | null
