@@ -6,12 +6,12 @@ import FloatingCartButton from "../components/cart/FloatingCartButton"
 
 const Layout = () => {
   return (
-    <CartProvider>
-      <NavBar />
-      <Outlet />
-      <Footer />
-      <FloatingCartButton />
-    </CartProvider>
+      <CartProvider>
+        <NavBar />
+        <Outlet />
+        <Footer />
+        <FloatingCartButton />
+      </CartProvider>
   )
 }
 

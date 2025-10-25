@@ -32,13 +32,6 @@ const Orders = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
-    if (!decodedToken) {
-      toast.error("Debes iniciar sesión para realizar un pedido")
-      navigate("/login", {replace: true})
-    }
-  }, [decodedToken, navigate])
-
-  useEffect(() => {
     const getUserData = async () => {
       const user = await fetchUser(decodedToken!.id)
 

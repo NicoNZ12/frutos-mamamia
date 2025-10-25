@@ -27,7 +27,7 @@ const ProductCard = ({
   const closeModal = () => {
     setIsModalOpen(false)
   }
-
+  
   return (
     <>
       <div 

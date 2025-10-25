@@ -1,6 +1,9 @@
 import { useState } from "react"
 import CloseIcon from '@mui/icons-material/Close';
 import { useCart } from '../../context/CartContext'
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
 interface ProductModalProps {
   isOpen: boolean
@@ -25,6 +28,10 @@ const ProductModal = ({
 }: ProductModalProps) => {
   const [quantity, setQuantity] = useState(1)
   const { addToCart } = useCart()
+  const { isAuthenticated } = useAuth()
+
+  const navigate = useNavigate()
+
 
   const handleAddToCart = () => {
     addToCart(
@@ -160,7 +167,14 @@ const ProductModal = ({
           </div>
 
           <button 
-            onClick={handleAddToCart}
+            onClick={() => {
+              if(isAuthenticated){
+                handleAddToCart()
+              }else{
+                toast.error("Por favor, inicia sesión para agregar productos al carrito.")
+                navigate("/login", {replace: true})
+              }
+            }}
             className="w-full bg-primary hover:bg-primary-600 text-white font-medium py-3 rounded-lg transition-colors duration-200 hover:shadow-md cursor-pointer">
             Agregar al carrito - ${(price * quantity).toLocaleString()}
           </button>
