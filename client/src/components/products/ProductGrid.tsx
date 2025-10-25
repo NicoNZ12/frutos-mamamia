@@ -8,9 +8,8 @@ interface IProduct{
     name: string,
     description?: string,
     price: number,
-    imgUrl?: string
+    imgUrl?: string,
     unitPrice: string
-    quantityStep: number
 }
 
 interface ProductGridProps {
@@ -78,16 +77,16 @@ const ProductGrid = ({ selectedCategory }: ProductGridProps) => {
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
         {products.map((product) => (
           <ProductCard
             key={product._id}
             id={product._id}
             name={product.name}
+            description={product.description}
             price={product.price}
             image={product.imgUrl}
             unitPrice={product.unitPrice}
-            quantityStep={product.quantityStep}
           />
         ))}
       </div>

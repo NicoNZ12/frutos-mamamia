@@ -25,7 +25,6 @@ export class UserController {
             }
 
             const user = await getUser(id)
-            console.log("USUARIO:", user)
 
             if(!user){
                 res.status(404).json({ message: "No se encontró usuario con ese ID" })

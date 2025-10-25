@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router"
 import { handleAuth } from "../api/auth/handle-auth"
 import toast from "react-hot-toast"
-import Cookies from 'js-cookie'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
     const [email, setEmail] = useState("")
@@ -12,6 +12,7 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false);
+    const { login } = useAuth();
 
     const navigate = useNavigate()
 
@@ -43,7 +44,7 @@ const Login = () => {
             const result = await handleAuth(url, user)
 
             if(result.success){
-                Cookies.set('token', result.result.token, { expires: 1 });
+                login(result.result.token, { expires: 1 });
                 toast.success("¡Inicio de sesión exitoso!")
                 navigate("/", {replace: true})
 

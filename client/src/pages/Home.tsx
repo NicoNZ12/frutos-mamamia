@@ -27,8 +27,8 @@ const Home = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  to="/"
-                  className="px-8 py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-400 transition-colors text-lg"
+                  to="/productos"
+                  className="px-8 py-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-600 transition-colors text-lg"
                 >
                   Ver Productos
                   <EastIcon className="ml-2 w-5 h-5 inline-block" />
