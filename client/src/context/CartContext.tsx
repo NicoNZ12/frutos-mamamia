@@ -17,7 +17,7 @@ interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
   getTotalItems: () => number
-  getTotalPrice: () => number
+  getTotalPrice: () => number,
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -90,7 +90,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     updateQuantity,
     clearCart,
     getTotalItems,
-    getTotalPrice
+    getTotalPrice,
   }
 
   return (

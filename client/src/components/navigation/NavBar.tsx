@@ -114,13 +114,6 @@ const NavBar = () => {
               >
                 Contacto
               </NavLink>
-              <NavLink 
-                to="/pedidos" 
-                className="nav-links--mobile" 
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <CartIcon />
-              </NavLink>
               <div className="border-t pt-2 mt-2">
                 <NavLink 
                   to="/login" 
