@@ -8,6 +8,7 @@ import SignUp from '../pages/SignUp.tsx'
 import Layout from '../layout/Layout.tsx'
 import Product from '../pages/Product.tsx'
 import Orders from '../pages/Orders.tsx'
+import Dashboard from '../pages/Dashboard.tsx'
 
 const router = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
     {
         path: "/registrarse",
         Component: SignUp
+    },
+    {
+        path: "/dashboard",
+        Component: Dashboard
     }
 ])
 
