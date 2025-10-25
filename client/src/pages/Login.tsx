@@ -5,6 +5,7 @@ import toast from "react-hot-toast"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useAuth } from "../context/AuthContext";
+import { decodeJWT } from "../utils/decode-jwt";
 
 const Login = () => {
     const [email, setEmail] = useState("")
@@ -45,7 +46,15 @@ const Login = () => {
 
             if(result.success){
                 login(result.result.token, { expires: 1 });
+                const decodedToken = decodeJWT();
+
                 toast.success("¡Inicio de sesión exitoso!")
+                
+                if(decodedToken?.isAdmin){
+                  navigate("/dashboard")
+                  return
+                }
+
                 navigate("/", {replace: true})
 
                 if(rememberMe) {
