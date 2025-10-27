@@ -5,12 +5,16 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import logo from '../../assets/imgs/logo2.webp'
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
+import { useAuth } from '../../context/AuthContext';
 
 const SideBarMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const { logout } = useAuth()
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleSidebar = () => setIsOpen(!isOpen)
+
+  const navigate = useNavigate()
 
   return (
     <>
@@ -37,7 +41,7 @@ const SideBarMenu = () => {
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <div>
+        <div className='mt-8 md:mt-0'>
           <div className="p-6 text-xl font-bold text-primary">
             Frutos Mamamia
             <h2 className='text-white text-lg font-normal'>Almacén Natural</h2>
@@ -46,7 +50,7 @@ const SideBarMenu = () => {
             <ul className="space-y-2 mb-4">
               <NavLink
                 to="/admin"
-                className="flex items-center px-4 py-2 rounded-lg hover:bg-secondary-600 transition-colors"
+                className="flex items-center px-4 py-2 rounded-lg hover:bg-secondary-600 transition-colors nav-links"
               >
                 <InventoryIcon className="h-5 w-5 mr-3" />
                 Productos
@@ -54,7 +58,7 @@ const SideBarMenu = () => {
 
               <NavLink
                 to="/admin/pedidos"
-                className="flex items-center px-4 py-2 rounded-lg hover:bg-secondary-600 transition-colors"
+                className="flex items-center px-4 py-2 rounded-lg hover:bg-secondary-600 transition-colors nav-links"
               >
                 <ShoppingBasketIcon className="h-5 w-5 mr-3" />
                 Pedidos
@@ -78,7 +82,13 @@ const SideBarMenu = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center text-secondary-300 hover:text-white cursor-pointer text-sm transition-colors">
+          <div 
+            className="flex items-center text-white hover:text-white cursor-pointer text-sm transition-colors nav-links"
+            onClick={() => {
+                logout()
+                navigate('/');
+            }}
+          >
             <LogoutIcon className="h-5 w-5 mr-2" />
             Cerrar Sesión
           </div>
