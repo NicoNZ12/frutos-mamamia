@@ -51,7 +51,7 @@ const Login = () => {
                 toast.success("¡Inicio de sesión exitoso!")
                 
                 if(decodedToken?.isAdmin){
-                  navigate("/dashboard")
+                  navigate("/admin")
                   return
                 }
 
