@@ -1,6 +1,7 @@
 import CategoryCard from "./CategoryCard"
 import { useEffect, useState } from "react"
 import { fetchCategory } from "../../api/products/fetchCategory"
+import { useProduct } from "../../context/ProductContext"
 
 interface ICategory {
   _id: string
@@ -13,16 +14,7 @@ interface CategoryListProps {
 }
 
 const CategoryList = ({ selectedCategory, onCategorySelect }: CategoryListProps) => {
-  const [categories, setCategories] = useState<ICategory[]>([])
-
-  useEffect(() => {
-    const getCategories = async () => {
-        const data = await fetchCategory()
-        setCategories(data)
-    }
-
-    getCategories()
-  }, [])
+  const {categories} = useProduct()
 
   if (!categories || categories.length === 0) {
     return (

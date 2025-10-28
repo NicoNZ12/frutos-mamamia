@@ -56,6 +56,8 @@ const productoSchema = new Schema({
     versionKey: false
 })
 
+productoSchema.index({ name: "text" }, { default_language: "spanish" })
+
 const productoModel = model<IProduct>("Producto", productoSchema)
 
 export default productoModel

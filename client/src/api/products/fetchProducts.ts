@@ -1,4 +1,4 @@
-export const fetchProducts = async (category?: string, page: number = 1, limit: number = 15) => {
+export const fetchProducts = async (query: string, category?: string, page: number = 1, limit: number = 15) => {
     try {
         let requestUrl = import.meta.env.VITE_SERVER_URL + "productos/"
         
@@ -7,7 +7,11 @@ export const fetchProducts = async (category?: string, page: number = 1, limit: 
         if (category) {
             params.append('category', category)
         }
-        
+
+        if (query) {
+            params.append('name', query)
+        }
+                
         params.append('page', page.toString())
         params.append('limit', limit.toString())
         

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import ProductCard from "./ProductCard"
 import { fetchProducts } from "../../api/products/fetchProducts"
 import { PaginationControls } from "../Pagination"
+import { useProduct } from "../../context/ProductContext"
 
 interface IProduct{
     _id: string,
@@ -16,43 +17,8 @@ interface ProductGridProps {
     selectedCategory?: string
 }
 
-interface PaginationData {
-    page: number
-    totalPages: number
-}
-
 const ProductGrid = ({ selectedCategory }: ProductGridProps) => {
-    const [products, setProducts] = useState<IProduct[]>([])
-    const [pagination, setPagination] = useState<PaginationData>({
-        page: 1,
-        totalPages: 1,
-    })
-    const [loading, setLoading] = useState(false)
-    const [currentPage, setCurrentPage] = useState(1)
-
-    useEffect(() => {
-        const getProducts = async () => {
-            setLoading(true)
-            try {
-                const data = await fetchProducts(selectedCategory, currentPage, 15)
-                setProducts(data.products || data)
-                setPagination({
-                    page: data.page || 1,
-                    totalPages: data.totalPages || 1,
-                })
-            } catch (error) {
-                setProducts([])
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        getProducts()
-    }, [selectedCategory, currentPage])
-
-    useEffect(() => {
-        setCurrentPage(1)
-    }, [selectedCategory])
+    const {products, pagination, loading, setCurrentPage} = useProduct()
 
     if (loading) {
         return (

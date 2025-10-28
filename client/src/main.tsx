@@ -5,17 +5,20 @@ import { RouterProvider } from 'react-router/dom'
 import router from './router/router.js'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext.js'
+import { ProductProvider } from './context/ProductContext.js'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
-      <Toaster 
-        position="top-center"
-        toastOptions={{
-          duration: 4000,
-        }}
-      />
+      <ProductProvider>
+        <RouterProvider router={router} />
+        <Toaster 
+          position="top-center"
+          toastOptions={{
+            duration: 4000,
+          }}
+        />
+      </ProductProvider>
     </AuthProvider>
 
   </StrictMode>,

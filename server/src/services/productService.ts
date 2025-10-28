@@ -76,12 +76,8 @@ export const getProductsByCategoryName = async (categoryName: string, page: numb
 }
 
 export const getProductsBySearch = async (search: string) => {
-    const regex = new RegExp(
-        search.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'
-    )
-
     const products = await Product.find({
-        name: { $regex: regex }
+        $text: { $search: search }
     })
 
     return products
