@@ -4,6 +4,7 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import PersonIcon from '@mui/icons-material/Person';
 import logo from '../../assets/imgs/logo2.webp'
 import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
@@ -62,6 +63,14 @@ const SideBarMenu = () => {
               >
                 <ShoppingBasketIcon className="h-5 w-5 mr-3" />
                 Pedidos
+              </NavLink>
+
+              <NavLink
+                to="/admin/usuarios"
+                className="flex items-center px-4 py-2 rounded-lg hover:bg-secondary-600 transition-colors nav-links"
+              >
+                <PersonIcon className="h-5 w-5 mr-3" />
+                Usuarios
               </NavLink>
               
             </ul>

@@ -13,6 +13,7 @@ interface IProductContext {
   categories: ICategory[];
   searchQuery: string; 
   setSearchQuery: (query: string) => void;
+  debouncedQuery: string;
 }
 
 interface IProduct {
@@ -107,7 +108,8 @@ export const ProductProvider = ({
     setCurrentPage,
     categories,
     searchQuery,
-    setSearchQuery
+    setSearchQuery,
+    debouncedQuery
   };
 
   return (
