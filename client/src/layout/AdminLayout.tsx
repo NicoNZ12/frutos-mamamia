@@ -3,10 +3,13 @@ import SideBarMenu from "../components/navigation/SideBarMenu"
 
 const AdminLayout = () => {
   return (
-    <>
+    <div className="min-h-screen mt-10 lg:flex lg:mt-0">
         <SideBarMenu />
-        <Outlet />
-    </>
+
+        <div className="flex-1 p-8 overflow-y-auto">
+          <Outlet />
+        </div>
+    </div>
   )
 }
 

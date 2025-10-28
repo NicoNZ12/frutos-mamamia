@@ -37,12 +37,12 @@ const SideBarMenu = () => {
       {/* Sidebar */}
       <aside className={`
         fixed lg:static inset-y-0 left-0 z-40
-        w-64 bg-secondary-900 text-white flex flex-col justify-between
+        w-60 bg-secondary-900 text-white flex flex-col justify-between
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className='mt-8 md:mt-0'>
-          <div className="p-6 text-xl font-bold text-primary">
+          <div className="p-6 text-xl font-bold text-primary border-b border-secondary-500">
             Frutos Mamamia
             <h2 className='text-white text-lg font-normal'>Almacén Natural</h2>
           </div>
@@ -68,7 +68,7 @@ const SideBarMenu = () => {
           </nav>
         </div>
 
-        <div className="p-4 border-t border-gray-700">
+        <div className="p-4 border-t border-secondary-500">
           <div className="flex items-center mb-4">
             <img
               src={logo}
@@ -83,7 +83,7 @@ const SideBarMenu = () => {
             </div>
           </div>
           <div 
-            className="flex items-center text-white hover:text-white cursor-pointer text-sm transition-colors nav-links"
+            className="flex items-center mt-6 text-white hover:text-white cursor-pointer text-sm transition-colors nav-links"
             onClick={() => {
                 logout()
                 navigate('/');
