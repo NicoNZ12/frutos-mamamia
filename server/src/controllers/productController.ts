@@ -6,13 +6,19 @@ import { uploadToCloudinary } from "../utils/uploadImage"
 export class ProductController {
     static async getProducts(req: Request, res: Response): Promise<void> {
         try {
-            let { category, page, limit } = req.query
+            let { category, page, limit, name } = req.query
             
             const pageNum = parseInt(page as string) || 1
             const limitNum = parseInt(limit as string) || 15
 
             if (typeof category === "string") {
                 const products = await getProductsByCategoryName(category, pageNum, limitNum)
+                res.status(200).json(products)
+                return
+            }
+
+            if(typeof name === "string"){
+                const products = await getProductsBySearch(name)
                 res.status(200).json(products)
                 return
             }
@@ -49,24 +55,6 @@ export class ProductController {
             res.status(500).json({ message: "Error al obtener el producto.", error: err.message })
         }
 
-    }
-
-    static async searchProducts(req: Request, res: Response): Promise<void> {
-        try{
-            const { q } = req.query
-
-            if(!q){
-                res.status(400).json({ message: "El parámetro de búsqueda 'q' es obligatorio." })
-                return
-            }
-
-            const products = await getProductsBySearch(q as string)
-            res.status(200).json(products)
-
-        }catch(error){
-            const err = error as Error
-            res.status(500).json({ message: "Error al buscar productos.", error: err.message })
-        }
     }
 
     static async addProduct(req: Request, res: Response): Promise<void> {

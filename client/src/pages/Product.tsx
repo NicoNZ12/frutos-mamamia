@@ -1,9 +1,10 @@
 import { useState } from "react"
 import CategoryList from "../components/products/CategoryList"
 import ProductGrid from "../components/products/ProductGrid"
+import { useProduct } from "../context/ProductContext"
 
 const Product = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("")
+  const { selectedCategory, setSelectedCategory } = useProduct()
 
   return (
     <>
