@@ -76,11 +76,15 @@ export const getProductsByCategoryName = async (categoryName: string, page: numb
 }
 
 export const getProductsBySearch = async (search: string) => {
-    const products = await Product.find({
-        $text: { $search: search }
-    })
-
-    return products
+    const regex = new RegExp(search, 'i')
+    
+    const users = await Product.find({
+        $or: [
+            { name: { $regex: regex } },
+        ]
+    }).collation({ locale: 'es', strength: 1 })
+    
+    return users
 }
 
 export const saveProduct = async (product: IProduct) => {
