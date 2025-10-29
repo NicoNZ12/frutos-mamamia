@@ -12,6 +12,8 @@ import Products from '../pages/admin/Products.tsx'
 import AdminLayout from '../layout/AdminLayout.tsx'
 import Pedidos from '../pages/admin/Pedidos.tsx'
 import Usuarios from '../pages/admin/Usuarios.tsx'
+import NuevoProducto from '../pages/admin/NuevoProducto.tsx'
+import EditarProducto from '../pages/admin/EditarProducto.tsx'
 
 const router = createBrowserRouter([
     {
@@ -64,6 +66,14 @@ const router = createBrowserRouter([
             {
                 path: "usuarios",
                 Component: Usuarios
+            },
+            {
+                path: "añadir",
+                Component: NuevoProducto
+            },
+            {
+                path: "editar/:productId",
+                Component: EditarProducto
             }
         ]
     }

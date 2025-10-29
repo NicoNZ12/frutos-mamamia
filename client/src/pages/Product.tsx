@@ -1,4 +1,3 @@
-import { useState } from "react"
 import CategoryList from "../components/products/CategoryList"
 import ProductGrid from "../components/products/ProductGrid"
 import { useProduct } from "../context/ProductContext"

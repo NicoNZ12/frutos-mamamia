@@ -36,7 +36,6 @@ const Usuarios = () => {
         const getUsers = async () => {
             setLoading(true)
             const users = await fetchUsers(debouncedQuery)
-            console.log(users)
             setUsers(users)
             setLoading(false)
         }
