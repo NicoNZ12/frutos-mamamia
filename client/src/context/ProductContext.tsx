@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { fetchProducts } from "../api/products/fetchProducts";
+import { deleteProduct, fetchProducts } from "../api/products/fetchProducts";
 import { fetchCategory } from "../api/products/fetchCategory";
+import toast from "react-hot-toast";
 
 interface IProductContext {
   products: IProduct[];
@@ -13,6 +14,8 @@ interface IProductContext {
   categories: ICategory[];
   searchQuery: string; 
   setSearchQuery: (query: string) => void;
+  debouncedQuery: string;
+  handleDeleteProduct: (id: string) => void;
 }
 
 interface IProduct {
@@ -97,6 +100,15 @@ export const ProductProvider = ({
     getCategories()
   }, [])
 
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await deleteProduct(id);
+      setProducts((prevProducts) => prevProducts.filter((product) => product._id !== id));
+    } catch (error) {
+      toast.error(`Error al eliminar el producto: ${error}`);
+    }
+  }
+
   const value = {
     products,
     selectedCategory,
@@ -107,7 +119,9 @@ export const ProductProvider = ({
     setCurrentPage,
     categories,
     searchQuery,
-    setSearchQuery
+    setSearchQuery,
+    debouncedQuery,
+    handleDeleteProduct
   };
 
   return (

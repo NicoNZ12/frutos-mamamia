@@ -11,6 +11,7 @@ import Orders from '../pages/Orders.tsx'
 import Products from '../pages/admin/Products.tsx'
 import AdminLayout from '../layout/AdminLayout.tsx'
 import Pedidos from '../pages/admin/Pedidos.tsx'
+import Usuarios from '../pages/admin/Usuarios.tsx'
 
 const router = createBrowserRouter([
     {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
             {
                 path: "pedidos",
                 Component: Pedidos
+            },
+            {
+                path: "usuarios",
+                Component: Usuarios
             }
         ]
     }

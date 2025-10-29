@@ -8,6 +8,7 @@ import { useNavigate } from "react-router"
 import { handleOrder } from "../api/orders/handle-order"
 import { decodeJWT } from "../utils/decode-jwt"
 import { fetchUser } from "../api/users/fetchUser"
+import { handleSuccessOrderAlert } from "../utils/handle-alert"
 
 interface OrderForm {
   address: string
@@ -116,7 +117,7 @@ const Orders = () => {
       })
       
 
-      toast.success("¡Pedido realizado con éxito! Gracias por comprar en Mamamia.")
+      handleSuccessOrderAlert()
       setTimeout(() => {
         navigate("/productos")
       }, 4000)

@@ -32,3 +32,24 @@ export const fetchProducts = async (query: string, category?: string, page: numb
         return { products: [] }
     }
 }
+
+const url = import.meta.env.VITE_SERVER_URL + "productos/"
+
+export const deleteProduct = async(id: string) => {
+    try{
+        const response = await fetch(url + id, {
+            method: "DELETE",
+        })
+
+        if (!response.ok) {
+            throw new Error(`Error al eliminar el producto: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json()
+
+        return data
+    }catch(error){
+        console.error(error)
+        throw error
+    }
+}

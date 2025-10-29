@@ -5,6 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useProduct } from "../../context/ProductContext";
 import { PaginationControls } from "../../components/Pagination";
 import { CircularProgress } from "@mui/material";
+import { categoryColors } from "../../constants/categoryColors";
+import { handleDeleteAlert } from "../../utils/handle-alert";
 
 const Products = () => {
   const {
@@ -15,6 +17,7 @@ const Products = () => {
     loading,
     searchQuery,
     setSearchQuery,
+    handleDeleteProduct
   } = useProduct();
 
   return (
@@ -104,9 +107,14 @@ const Products = () => {
                     </div>
                   </td>
                   <td className="px-6 py-2">
-                    <span className="px-3 py-1 text-xs font-medium rounded-full bg-secondary-200 text-secondary-500">
-                      {categories.find((cat) => cat._id === product.category)
-                        ?.name || "Sin categoría"}
+                    <span
+                      className={`px-3 py-1 text-xs font-medium rounded-full ${
+                        (categoryColors)[categories.find((cat) => cat._id === product.category)?.name || "Sin categoría"]?.bg || "bg-gray-200"
+                      } ${
+                        (categoryColors)[categories.find((cat) => cat._id === product.category)?.name || "Sin categoría"]?.text || "text-gray-500"
+                      }`}
+                    >
+                      {categories.find((cat) => cat._id === product.category)?.name || "Sin categoría"}
                     </span>
                   </td>
                   <td className="px-6 py-2 font-medium text-gray-800">
@@ -125,6 +133,11 @@ const Products = () => {
                         type="button"
                         className="text-secondary-500/80 hover:text-red-600 transition-colors cursor-pointer"
                         title="Eliminar"
+                        onClick={() => {
+                          handleDeleteAlert(() => {
+                            handleDeleteProduct(product._id)
+                          })
+                        }}
                       >
                         <DeleteIcon className="h-5 w-5" />
                       </button>

@@ -28,16 +28,14 @@ export const getUser = async (id: string) => {
 }
 
 export const getUsersBySearch = async (search: string) => {
-    const regex = new RegExp(
-        search.normalize('NFD').replace(/[\u0300-\u036f]/g, ''), 'i'
-    ) 
+    const regex = new RegExp(search, 'i')
 
     const users = await User.find({
         $or: [
             { name: { $regex: regex } },
             { lastName: { $regex: regex } }
         ]
-    })
+    }).collation({ locale: 'es', strength: 1 })
 
     return users
 }
