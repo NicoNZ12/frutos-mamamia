@@ -6,6 +6,7 @@ import { useProduct } from "../../context/ProductContext";
 import { PaginationControls } from "../../components/Pagination";
 import { CircularProgress } from "@mui/material";
 import { categoryColors } from "../../constants/categoryColors";
+import { handleDeleteAlert } from "../../utils/handle-alert";
 
 const Products = () => {
   const {
@@ -16,6 +17,7 @@ const Products = () => {
     loading,
     searchQuery,
     setSearchQuery,
+    handleDeleteProduct
   } = useProduct();
 
   return (
@@ -131,6 +133,11 @@ const Products = () => {
                         type="button"
                         className="text-secondary-500/80 hover:text-red-600 transition-colors cursor-pointer"
                         title="Eliminar"
+                        onClick={() => {
+                          handleDeleteAlert(() => {
+                            handleDeleteProduct(product._id)
+                          })
+                        }}
                       >
                         <DeleteIcon className="h-5 w-5" />
                       </button>
