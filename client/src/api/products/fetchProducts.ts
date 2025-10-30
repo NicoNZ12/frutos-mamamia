@@ -1,3 +1,5 @@
+import type { ApiError} from "../../context/ProductContext"
+
 export const fetchProducts = async (query: string, category?: string, page: number = 1, limit: number = 15) => {
     try {
         let requestUrl = import.meta.env.VITE_SERVER_URL + "productos/"
@@ -22,8 +24,8 @@ export const fetchProducts = async (query: string, category?: string, page: numb
         const response = await fetch(requestUrl)
         const data = await response.json()
         
-        if (response.status !== 201 && response.status !== 200) {
-            throw new Error("Error al obtener los productos")
+        if(!response.ok){
+            throw data as ApiError;
         }
         
         return data
@@ -41,13 +43,34 @@ export const deleteProduct = async(id: string) => {
             method: "DELETE",
         })
 
-        if (!response.ok) {
-            throw new Error(`Error al eliminar el producto: ${response.status} ${response.statusText}`);
+        const data = await response.json()
+
+        if(!response.ok){
+            throw data as ApiError;
         }
+
+        return data
+    }catch(error){
+        console.error(error)
+        throw error
+    }
+}
+
+export const addProduct = async (newProduct: FormData) => {
+    try{
+        const response = await fetch(url, {
+            method: "POST",
+            body: newProduct
+        })
 
         const data = await response.json()
 
+        if(!response.ok){
+            throw data as ApiError;
+        }
+
         return data
+
     }catch(error){
         console.error(error)
         throw error

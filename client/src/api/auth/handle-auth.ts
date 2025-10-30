@@ -23,7 +23,7 @@ export const handleAuth= async (url: string, data: IRegistro | ILogin) => {
 
         const result = await response.json()
 
-        if (response.status !== 201 && response.status !== 200) {
+        if (!response.ok) {
             return {
                 result,
                 success: false

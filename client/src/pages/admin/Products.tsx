@@ -7,6 +7,7 @@ import { PaginationControls } from "../../components/Pagination";
 import { CircularProgress } from "@mui/material";
 import { categoryColors } from "../../constants/categoryColors";
 import { handleDeleteAlert } from "../../utils/handle-alert";
+import { Link } from "react-router";
 
 const Products = () => {
   const {
@@ -31,13 +32,14 @@ const Products = () => {
             Administra el catálogo de productos de tu tienda
           </p>
         </div>
-        <button
-          type="button"
+        <Link
+          to="/admin/añadir"
           className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg shadow-sm hover:bg-primary-600 transition-colors cursor-pointer"
         >
+          
           <AddIcon className="h-5 w-5" />
           Añadir Producto
-        </button>
+        </Link>
       </header>
 
       <div className="mb-6">
@@ -105,6 +107,9 @@ const Products = () => {
                     <div className="font-medium text-gray-800">
                       {product.name}
                     </div>
+                    <div className="text-sm text-secondary-400">
+                      {product.description}
+                    </div>
                   </td>
                   <td className="px-6 py-2">
                     <span
@@ -122,13 +127,13 @@ const Products = () => {
                   </td>
                   <td className="px-6 py-2">
                     <div className="flex items-center gap-3">
-                      <button
-                        type="button"
+                      <Link
+                        to={`/admin/editar/${product._id}`}
                         className="text-secondary-500/80 hover:text-blue-600 transition-colors cursor-pointer"
                         title="Editar"
                       >
                         <EditIcon className="h-5 w-5" />
-                      </button>
+                      </Link>
                       <button
                         type="button"
                         className="text-secondary-500/80 hover:text-red-600 transition-colors cursor-pointer"

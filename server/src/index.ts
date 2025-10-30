@@ -7,6 +7,7 @@ import userRoute from './routes/userRoute'
 import authRoute from './routes/authRoute'
 import orderRoute from './routes/orderRoute'
 import cors from 'cors'
+import { errorHandler } from './middlewares/errorHandler'
 
 dotenv.config()
 
@@ -34,6 +35,9 @@ app.use("/productos", productRoute)
 app.use("/usuarios", userRoute)
 app.use("/auth", authRoute)
 app.use("/pedidos", orderRoute)
+
+//Manejador de eventos global
+app.use(errorHandler);
 
 
 app.listen(PORT, () => {

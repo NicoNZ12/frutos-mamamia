@@ -1,10 +1,11 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { getAllProducts, getOneProduct, removeProduct, saveProduct, updateProduct, getProductsByCategoryName, getProductsBySearch } from "../services/productService"
 import { IProduct } from "../model/productModel"
 import { uploadToCloudinary } from "../utils/uploadImage"
+import { AppError } from "../utils/appError"
 
 export class ProductController {
-    static async getProducts(req: Request, res: Response): Promise<void> {
+    static async getProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             let { category, page, limit, name } = req.query
             
@@ -27,44 +28,48 @@ export class ProductController {
             res.status(200).json(products)
 
         } catch (error) {
-            const err = error as Error
-            res.status(500).json({ message: "Error al obtener los productos.", error: err.message })
+            next(error)
         }
     }
 
-    static async getProduct(req: Request, res: Response): Promise<void> {
+    static async getProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const productID = req.params.id
 
             if (!productID) {
-                res.status(400).json({ message: "El ID del producto es obligatorio." })
-                return
+                throw new AppError(
+                    "El ID del producto es obligatorio.",
+                    400
+                )
             }
 
             const product = await getOneProduct(productID)
 
             if (!product) {
-                res.status(404).json({ message: "No se encontró un producto con ese ID" })
-                return
+                throw new AppError(
+                    "No se encontró un producto con ese ID.",
+                    404
+                )
             }
 
             res.status(200).json(product)
 
         } catch (error) {
-            const err = error as Error
-            res.status(500).json({ message: "Error al obtener el producto.", error: err.message })
+           next(error)
         }
 
     }
 
-    static async addProduct(req: Request, res: Response): Promise<void> {
+    static async addProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { name, description, price, category, type, unitPrice } = req.body
             const image = req.file
 
             if (!name || !price || !category || !unitPrice) {
-                res.status(400).json({ message: "Campos obligatorios faltantes." })
-                return
+                throw new AppError(
+                    "Campos obligatorios faltantes.",
+                    400
+                )
             }
 
             let imgUrl = ""
@@ -74,8 +79,10 @@ export class ProductController {
                     const uploadResult = await uploadToCloudinary(image.buffer, "frutos-mamamia")
                     imgUrl = uploadResult.secure_url
                 }catch(uploadResult){
-                    res.status(500).json({ message: "Error al subir la imagen" })
-                    return
+                    throw new AppError(
+                        "Error al subir la imagen.",
+                        500
+                    )
                 }
             }
 
@@ -104,24 +111,27 @@ export class ProductController {
             res.status(201).json({ message: "producto creado correctamente.", payload: savedProduct })
 
         } catch (error) {
-            const err = error as Error
-            res.status(500).json({ message: "Error al añadir un producto.", error: err.message })
+            next(error)
         }
     }
 
-    static async editProduct(req: Request, res: Response): Promise<void> {
+    static async editProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const productID = req.params.id
             const image = req.file
 
             if (!productID) {
-                res.status(400).json({ message: "El ID del producto es obligatorio." })
-                return
+                throw new AppError(
+                    "El ID del producto es obligatorio.",
+                    400
+                )
             }
             
             if (Object.keys(req.body).length === 0 && !image) {
-                res.status(400).json({ message: "Debes enviar al menos un campo para actualizar." })
-                return
+                throw new AppError(
+                    "Debes enviar al menos un campo para actualizar.",
+                    400
+                )
             }
 
             const updateData = {
@@ -138,47 +148,53 @@ export class ProductController {
                     updateData.imgUrl = uploadResult.secure_url
 
                 }catch(uploadError){
-                    res.status(500).json({ message: "Error al subir la imagen" })
-                    return 
+                    throw new AppError(
+                        "Error al subir la imagen.",
+                        500
+                    )
                 }
             }
 
             const updatedProduct = await updateProduct(productID, updateData)
 
             if (!updatedProduct) {
-                res.status(404).json({ message: "No se encontró un producto con ese ID para actualizar." })
-                return
+                throw new AppError(
+                    "No se encontró un producto con ese ID para actualizar.",
+                    404
+                )
             }
 
             res.status(200).json({ message: "Producto actualizado correctamente", payload: updatedProduct })
 
         } catch (error) {
-            const err = error as Error
-            res.status(500).json({ message: "Error al actualizar un producto.", error: err.message })
+            next(error)
         }
     }
 
-    static async deleteProduct(req: Request, res: Response): Promise<void> {
+    static async deleteProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const productID = req.params.id
 
             if (!productID) {
-                res.status(400).json({ message: "El ID del producto es obligatorio." })
-                return
+                throw new AppError(
+                    "El ID del producto es obligatorio.",
+                    400
+                )
             }
 
             const deletedProduct = await removeProduct(productID)
 
             if (!deletedProduct) {
-                res.status(404).json({ message: "No se encontró un producto con ese ID para eliminar." })
-                return
+                throw new AppError(
+                    "No se encontró un producto con ese ID para actualizar.",
+                    404
+                )
             }
 
             res.status(200).json({ message: "Producto eliminado correctamente." })
 
         } catch (error) {
-            const err = error as Error
-            res.status(500).json({ message: "Error al eliminar un producto.", error: err.message })
+            next(error)
         }
     }
 }
