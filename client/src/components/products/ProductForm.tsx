@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Link, useNavigate } from 'react-router';
 import { CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useProduct } from '../../context/ProductContext';
 
-interface IProductFormData {
+export interface IProductFormData {
+  _id?: string;
   name: string;
   description?: string;
   price: number;
@@ -31,10 +32,9 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(product?.imgUrl || null)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isLoading, setLoading] = useState(false)
-  const { categories, handleAddProduct } = useProduct()
+  const { categories, handleAddProduct, handleEditProduct } = useProduct()
 
   const navigate = useNavigate()
-
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -86,7 +86,6 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
     setLoading(true)
     try{
       if(mode === "add"){  
-        console.log("Añadir producto:", formData);
         const isProductAdded = await handleAddProduct(formData, imageFile!);
 
         if(isProductAdded){
@@ -96,6 +95,12 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
             
       } else {
         console.log("Editar producto:", formData);
+        const isProductEdited = await handleEditProduct(product!._id!, formData, imageFile!)
+
+        if(isProductEdited){
+          resetForm()
+          navigate('/admin')
+        }
       }
 
     }catch(error){
@@ -105,6 +110,23 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
     }
 
   }
+
+  useEffect(() => {
+    if(product){
+      setFormData({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        unitPrice: product.unitPrice,
+        category: product.category,
+        imgUrl: product.imgUrl,
+      })
+      
+      if (product.imgUrl) {
+        setImagePreview(product.imgUrl)
+      }
+    }
+  }, [product])
 
   return (
     <div className="bg-secondary-50 p-4 md:p-8 rounded-lg shadow-sm">

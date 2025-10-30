@@ -35,6 +35,22 @@ export const fetchProducts = async (query: string, category?: string, page: numb
     }
 }
 
+export const fetchProduct = async (id: string) => {
+    try{
+        const response = await fetch(url + id)
+        const data = await response.json()
+
+        if(!response.ok){
+            throw data as ApiError;
+        }
+        
+        return data
+    }catch(error){
+        console.error(error)
+        throw error
+    }
+}
+
 const url = import.meta.env.VITE_SERVER_URL + "productos/"
 
 export const deleteProduct = async(id: string) => {
@@ -61,6 +77,27 @@ export const addProduct = async (newProduct: FormData) => {
         const response = await fetch(url, {
             method: "POST",
             body: newProduct
+        })
+
+        const data = await response.json()
+
+        if(!response.ok){
+            throw data as ApiError;
+        }
+
+        return data
+
+    }catch(error){
+        console.error(error)
+        throw error
+    }
+}
+
+export const editProduct = async (id: string, productToEdit: FormData) => {
+    try{
+        const response = await fetch(url + id, {
+            method: "PUT",
+            body: productToEdit
         })
 
         const data = await response.json()

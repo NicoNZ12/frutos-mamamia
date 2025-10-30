@@ -72,7 +72,7 @@ const router = createBrowserRouter([
                 Component: NuevoProducto
             },
             {
-                path: "editar/:productId",
+                path: "editar/:id",
                 Component: EditarProducto
             }
         ]
