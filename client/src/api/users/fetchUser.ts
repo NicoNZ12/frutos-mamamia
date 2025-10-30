@@ -1,3 +1,5 @@
+import type { ApiError } from "../../context/ProductContext";
+
 const url = import.meta.env.VITE_SERVER_URL + "usuarios/"
 
 export const fetchUser = async (id: string) => {
@@ -5,8 +7,8 @@ export const fetchUser = async (id: string) => {
         const response = await fetch(url + id)
         const data = await response.json()
         
-        if (response.status !== 201 && response.status !== 200) {
-            throw new Error("Error al obtener el usuario")
+        if(!response.ok){
+            throw data as ApiError;
         }
         
         return data
@@ -36,8 +38,8 @@ export const fetchUsers = async (query: string, page: number = 1, limit: number 
         const response = await fetch(requestUrl)
         const data = await response.json()
         
-        if (response.status !== 201 && response.status !== 200) {
-            throw new Error("Error al obtener el usuario")
+        if(!response.ok){
+            throw data as ApiError;
         }
         
         return data

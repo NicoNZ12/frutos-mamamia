@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useProduct } from '../../context/ProductContext';
 
 interface IProductFormData {
   name: string;
-  description: string;
+  description?: string;
   price: number;
   unitPrice: string;
   category: string;
@@ -21,13 +22,18 @@ interface IProductFormProps {
 const ProductForm = ({product, mode}: IProductFormProps) => {
   const [formData, setFormData] = useState<IProductFormData>({
     name: product?.name || '',
-    description: product?.description || '',
+    description: product?.description,
     price: product?.price || 0,
     unitPrice: product?.unitPrice|| '',
     category: product?.category || '',
+    imgUrl: product?.imgUrl,
   });
   const [imagePreview, setImagePreview] = useState<string | null>(product?.imgUrl || null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [isLoading, setLoading] = useState(false)
+  const { categories, handleAddProduct } = useProduct()
+
+  const navigate = useNavigate()
 
 
   const handleChange = (
@@ -38,28 +44,66 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: e.target.type === 'number' ? parseFloat(value) || 0 : value,
+      [name]: e.target.type === 'number' ? parseFloat(value) : value,
     }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      setImageFile(file)
+
       const reader = new FileReader()
       reader.onloadend = () => {
         setImagePreview(reader.result as string)
       }
+
       reader.readAsDataURL(file)
     }
   }
 
   const handleRemoveImage = () => {
     setImagePreview(null)
+    setImageFile(null)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      description: '',
+      price: 0,
+      unitPrice: '',
+      category: '',
+      imgUrl: '',
+    });
+
+    setImagePreview(null)
+    setImageFile(null)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Datos del formulario:', formData)
+    setLoading(true)
+    try{
+      if(mode === "add"){  
+        console.log("Añadir producto:", formData);
+        const isProductAdded = await handleAddProduct(formData, imageFile!);
+
+        if(isProductAdded){
+          resetForm()
+          navigate('/admin')
+        }
+            
+      } else {
+        console.log("Editar producto:", formData);
+      }
+
+    }catch(error){
+      console.error("Error al enviar el formulario:", error)
+    }finally{
+      setLoading(false)
+    }
+
   }
 
   return (
@@ -83,7 +127,7 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                     htmlFor="name" 
                     className="block text-sm font-medium text-secondary-500/80 mb-1"
                   >
-                    Nombre del Producto
+                    Nombre del Producto <span className='text-red-600'>*</span>
                   </label>
                   <input
                     type="text"
@@ -92,7 +136,7 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Ej: Almendras Premium"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 placeholder-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary placeholder-gray-400"
                   />
                 </div>
 
@@ -111,7 +155,7 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                     value={formData.description}
                     onChange={handleChange}
                     placeholder="Describe el producto en detalle..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 placeholder-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary placeholder-gray-400"
                   />
                 </div>
 
@@ -124,7 +168,7 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                       htmlFor="price" 
                       className="block text-sm font-medium text-secondary-500/80 mb-1"
                     >
-                      Precio ($)
+                      Precio ($) <span className='text-red-600'>*</span>
                     </label>
                     <input
                       type="number"
@@ -132,7 +176,7 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                       name="price"
                       value={formData.price}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                     />
                   </div>
 
@@ -142,7 +186,7 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                       htmlFor="unitPrice" 
                       className="block text-sm font-medium text-secondary-500/80 mb-1"
                     >
-                      Unidad por precio
+                      Unidad por precio <span className='text-red-600'>*</span>
                     </label>
                     <select
                         id="unitPrice"
@@ -152,10 +196,10 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary cursor-pointer"
                     >
                         <option value="">Selecciona una unidad</option>
-                        <option value="unidad">Unidad (un)</option>
-                        <option value="kilo">Kilo (Kg)</option>
-                        <option value="gramo">Gramo (100gr)</option>
-                        <option value="litro">Litro (lt)</option>
+                        <option value="un">Unidad (un)</option>
+                        <option value="kg">Kilo (Kg)</option>
+                        <option value="gr">Gramo (100gr)</option>
+                        <option value="lt">Litro (lt)</option>
                     </select>
                   </div>
                 </div>
@@ -166,7 +210,7 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                     htmlFor="category" 
                     className="block text-sm font-medium text-secondary-500/80 mb-1"
                   >
-                    Categoría
+                    Categoría <span className='text-red-600'>*</span>
                   </label>
                   <select
                     id="category"
@@ -176,9 +220,11 @@ const ProductForm = ({product, mode}: IProductFormProps) => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary cursor-pointer"
                   >
                     <option value="">Selecciona una categoría</option>
-                    <option value="frutos-secos">Frutos Secos</option>
-                    <option value="semillas">Semillas</option>
-                    <option value="harinas">Harinas</option>
+                    {
+                        categories.map(cat => (
+                            <option key={cat._id} value={cat._id}>{cat.name}</option>
+                        ))
+                    }
                   </select>
                 </div>
               </div>

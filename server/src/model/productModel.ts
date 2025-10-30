@@ -22,7 +22,7 @@ const productoSchema = new Schema({
     description: {
         type: String,
         minlength: [10, "La descripción debe tener mínimo 10 caracteres."],
-        trim: true,
+        trim: true
     },
     price: {
         type: Number,

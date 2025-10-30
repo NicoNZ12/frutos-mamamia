@@ -107,6 +107,9 @@ const Products = () => {
                     <div className="font-medium text-gray-800">
                       {product.name}
                     </div>
+                    <div className="text-sm text-secondary-400">
+                      {product.description}
+                    </div>
                   </td>
                   <td className="px-6 py-2">
                     <span

@@ -1,3 +1,5 @@
+import type { ApiError } from "../../context/ProductContext";
+
 const url = import.meta.env.VITE_SERVER_URL + "categorias/"
 
 export const fetchCategory = async () => {
@@ -5,8 +7,8 @@ export const fetchCategory = async () => {
         const response = await fetch(url)
         const data = await response.json()
         
-        if (response.status !== 201 && response.status !== 200) {
-            throw new Error("Error al obtener las categorías")
+        if(!response.ok){
+            throw data as ApiError;
         }
         
         return data
