@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { addProduct, deleteProduct, fetchProducts } from "../api/products/fetchProducts";
+import { addProduct, deleteProduct, editProduct, fetchProducts } from "../api/products/fetchProducts";
 import { fetchCategory } from "../api/products/fetchCategory";
 import toast from "react-hot-toast";
 
@@ -17,6 +17,7 @@ interface IProductContext {
   debouncedQuery: string;
   handleDeleteProduct: (id: string) => void;
   handleAddProduct: (newProduct: newProduct, imageFile: File) => boolean | Promise<boolean>;
+  handleEditProduct: (id: string, updatedProduct: newProduct, imageFile: File | null) => boolean | Promise<boolean>;
 }
 
 export interface IProduct {
@@ -64,6 +65,7 @@ export const ProductProvider = ({
   });
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -93,7 +95,7 @@ export const ProductProvider = ({
     };
 
     getProducts();
-  }, [selectedCategory, currentPage, debouncedQuery]);
+  }, [selectedCategory, currentPage, debouncedQuery, refetch]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -111,7 +113,7 @@ export const ProductProvider = ({
   const handleDeleteProduct = async (id: string) => {
     try {
       await deleteProduct(id);
-      setProducts((prevProducts) => prevProducts.filter((product) => product._id !== id));
+      setRefetch(!refetch)
     } catch (error) {
       if (error && typeof error === 'object' && 'message' in error) {
       const apiError = error as ApiError;
@@ -144,6 +146,7 @@ export const ProductProvider = ({
 
     try{
       await addProduct(data)
+      setRefetch(!refetch)
       toast.success("Producto agregado exitosamente")
       return true
 
@@ -163,6 +166,39 @@ export const ProductProvider = ({
     }
   }
 
+  const handleEditProduct = async (id: string, updatedProduct: newProduct, imageFile: File | null) => {
+    const data = new FormData();
+
+    data.append('name', updatedProduct.name);
+    data.append('price', String(updatedProduct.price)); 
+    data.append('category', updatedProduct.category);
+    data.append('unitPrice', updatedProduct.unitPrice);
+
+    if (updatedProduct.description) {
+      data.append('description', updatedProduct.description);
+    }
+    if (imageFile) {
+      data.append('image', imageFile); 
+    }
+    try{
+      await editProduct(id, data)
+      setRefetch(!refetch)
+      toast.success("Producto editado exitosamente")
+      return true
+    }catch(error){
+      if (error && typeof error === 'object' && 'message' in error) {
+      const apiError = error as ApiError;
+
+      const errorMessage = apiError.error || apiError.message
+      toast.error(errorMessage)
+
+      } else {
+        toast.error("Error de red o inesperado. Intente de nuevo.")
+      }
+      return false
+    }
+  }
+
   const value = {
     products,
     selectedCategory,
@@ -176,7 +212,8 @@ export const ProductProvider = ({
     setSearchQuery,
     debouncedQuery,
     handleDeleteProduct,
-    handleAddProduct
+    handleAddProduct,
+    handleEditProduct
   };
 
   return (
