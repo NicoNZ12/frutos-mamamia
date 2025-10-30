@@ -1,22 +1,28 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import User from '../model/userModel'
 import { saveUser } from '../services/userService'
 import { generateToken } from '../utils/generateToken'
+import { AppError } from '../utils/appError'
 
 export class AuthController {
-    static async register(req: Request, res: Response): Promise<void> {
+    static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
             const { name, lastName, email, password } = req.body
 
             if(!name || !lastName || !email || !password){
-                res.status(400).json({ message: "Nombre, apellido, email y contraseña son obligatorios." })
-                return
+                throw new AppError(
+                    "Nombre, apellido, email y contraseña son obligatorios.",
+                    400
+                )
             }
 
             const existingUser = await User.findOne({ email: email })
             if(existingUser){
-                res.status(400).json({ message: "Error al registrar el usuario.", error: "El email ya está registrado" })
-                return
+                throw new AppError(
+                    "Error al registrar el usuario.",
+                    400,
+                    "El email ya está registrado."
+                )
             }
 
             const hashedPassword = await User.hashPassword(password)
@@ -34,40 +40,47 @@ export class AuthController {
             res.status(201).json({ message: "Usuario registrado correctamente.", payload: {name, lastName,email} })
 
         }catch(error){
-            const err = error as Error
-            res.status(500).json({ message: "Error al registrar el usuario.", error: err.message })
+            next(error)
         }
     }
 
-    static async login(req: Request, res: Response): Promise<void> {
+    static async login(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
             const { email, password } = req.body
 
             if(!email || !password){
-                res.status(400).json({ message: "Email y contraseña son obligatorios." })
-                return
+                throw new AppError(
+                    "Email y contraseña son obligatorios.",
+                    400
+                )
             }
 
             //validar formato de email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
             if(!emailRegex.test(email)){
-                res.status(400).json({ message: "El formato del email es inválido." })
-                return
+                throw new AppError(
+                    "El formato del email es inválido.",
+                    400
+                )
             }
 
             const user = await User.findOne({ email: email })
 
             if(!user){
-                res.status(401).json({ message: "Credenciales inválidas." })
-                return
+                throw new AppError(
+                    "Credenciales inválidas.",
+                    401
+                )
             }
 
             const isPasswordValid = await user.comparePassword(password, user.password)
 
             if(!isPasswordValid){
-                res.status(401).json({ message: "Credenciales inválidas." })
-                return
+                throw new AppError(
+                    "Credenciales inválidas.",
+                    401
+                )
             }
 
             const token = generateToken(user)
@@ -75,8 +88,7 @@ export class AuthController {
             res.status(200).json({ message: "Inicio de sesión exitoso.", token: token })
 
         }catch(error){
-            const err = error as Error
-            res.status(500).json({ message: "Error al iniciar sesión.", error: err.message })
+            next(error)
         }
     }
 }
