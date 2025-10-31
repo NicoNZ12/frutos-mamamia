@@ -14,7 +14,6 @@ interface CustomError extends Error {
     statusCode?: number;
     error?: string
 }
-
 type ErrorWithStatus = ValidationError | CastError | CustomError;
 
 export const errorHandler = (err: ErrorWithStatus, _req: Request, res: Response, _next: NextFunction) => {

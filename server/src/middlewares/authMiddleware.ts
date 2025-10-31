@@ -33,7 +33,7 @@ export const authentication = (req: Request, res: Response, next: NextFunction) 
 
 
     } catch (error) {
-        res.status(401).json({ message: "Error de autenticación-", error: "Token inválido o expirado." })
+        res.status(401).json({ message: "Error de autenticación.", error: "Token inválido o expirado." })
     }
 
 }

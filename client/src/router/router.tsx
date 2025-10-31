@@ -14,6 +14,9 @@ import Pedidos from '../pages/admin/Pedidos.tsx'
 import Usuarios from '../pages/admin/Usuarios.tsx'
 import NuevoProducto from '../pages/admin/NuevoProducto.tsx'
 import EditarProducto from '../pages/admin/EditarProducto.tsx'
+import ProtectedRoute from '../components/auth/ProtectedRoute.tsx'
+import PublicRoute from '../components/auth/PublicRoute.tsx'
+import Unauthorized from '../pages/Unauthorized.tsx'
 
 const router = createBrowserRouter([
     {
@@ -31,7 +34,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/pedidos",
-                Component: Orders,
+                element: <ProtectedRoute><Orders /></ProtectedRoute>,
             },
             {
                 path: "/nosotros",
@@ -45,15 +48,15 @@ const router = createBrowserRouter([
     },
     {
         path: "/login",
-        Component: Login
+        element: <PublicRoute><Login /></PublicRoute>
     },
     {
         path: "/registrarse",
-        Component: SignUp
+        element: <PublicRoute><SignUp /></PublicRoute>
     },
     {
         path: "/admin",
-        Component: AdminLayout,
+        element: <ProtectedRoute requireAdmin={true} ><AdminLayout /></ProtectedRoute>,
         children: [
             {
                 index: true,
@@ -75,7 +78,12 @@ const router = createBrowserRouter([
                 path: "editar/:id",
                 Component: EditarProducto
             }
+            
         ]
+    },
+    {
+        path: "unauthorized",
+        Component: Unauthorized
     }
 ])
 

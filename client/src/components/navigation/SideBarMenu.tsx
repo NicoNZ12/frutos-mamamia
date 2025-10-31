@@ -8,6 +8,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import logo from '../../assets/imgs/logo2.webp'
 import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
+import { decodeJWT } from '../../utils/decode-jwt';
 
 const SideBarMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,6 +17,9 @@ const SideBarMenu = () => {
   const toggleSidebar = () => setIsOpen(!isOpen)
 
   const navigate = useNavigate()
+
+
+  const decodedToken = decodeJWT()
 
   return (
     <>
@@ -85,10 +89,14 @@ const SideBarMenu = () => {
               className="w-10 h-10 rounded-full mr-3 object-cover"
             />
             <div className="flex-1 min-w-0">
-              <div className="font-medium text-white truncate">Admin</div>
-              <div className="text-xs text-gray-400 truncate">
-                admin@frutosmamamia.com
-              </div>
+              {
+                decodedToken ? (
+                  <div className="text-xs text-gray-400 truncate">
+                    {decodedToken.email}
+                  </div>
+                ) : null
+              }
+              
             </div>
           </div>
           <div 
