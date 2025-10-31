@@ -20,7 +20,7 @@ const Products = () => {
     setSearchQuery,
     handleDeleteProduct
   } = useProduct();
-
+  
   return (
     <main>
       <header className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">

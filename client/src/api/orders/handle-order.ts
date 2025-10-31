@@ -1,3 +1,6 @@
+import Cookies from "js-cookie"
+
+const token = Cookies.get("token")
 interface IProduct {
     productId: string,
     name: string,
@@ -21,7 +24,9 @@ export const handleOrder = async (order: IOrder) => {
         const response = await fetch(url, {
             method: "POST",
             headers: {
-                "content-type": "application/json"
+                "content-type": "application/json",
+                Authorization: `Bearer ${token}`
+
             },
             body: JSON.stringify(order)
         })

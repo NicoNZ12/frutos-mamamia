@@ -1,4 +1,7 @@
 import type { ApiError} from "../../context/ProductContext"
+import Cookies from "js-cookie"
+
+const token = Cookies.get("token")
 
 export const fetchProducts = async (query: string, category?: string, page: number = 1, limit: number = 15) => {
     try {
@@ -57,6 +60,9 @@ export const deleteProduct = async(id: string) => {
     try{
         const response = await fetch(url + id, {
             method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
 
         const data = await response.json()
@@ -76,6 +82,9 @@ export const addProduct = async (newProduct: FormData) => {
     try{
         const response = await fetch(url, {
             method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
             body: newProduct
         })
 
@@ -97,6 +106,9 @@ export const editProduct = async (id: string, productToEdit: FormData) => {
     try{
         const response = await fetch(url + id, {
             method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
             body: productToEdit
         })
 

@@ -34,7 +34,9 @@ const Orders = () => {
 
   useEffect(() => {
     const getUserData = async () => {
-      const user = await fetchUser(decodedToken!.id)
+      if (!decodedToken) return
+      
+      const user = await fetchUser(decodedToken.id)
 
       if(user.error){
         toast.error("Error al obtener los datos del usuario")
@@ -50,7 +52,7 @@ const Orders = () => {
 
     getUserData()
     
-  }, [decodedToken])
+  }, [])
   
   
 
@@ -311,7 +313,7 @@ const Orders = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white font-medium py-2.5 sm:py-3 rounded-lg transition-colors duration-200 hover:shadow-md text-sm sm:text-base"
+              className="w-full bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white font-medium py-2.5 sm:py-3 rounded-lg transition-colors duration-200 hover:shadow-md text-sm sm:text-base cursor-pointer"
             >
               {isSubmitting ? "Procesando pedido..." : `Confirmar pedido - $${getTotalPrice().toLocaleString()}`}
             </button>
