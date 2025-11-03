@@ -11,7 +11,7 @@ export const getAllOrders = async (status: string) => {
         filter.status = status
     }
 
-    const orders = await Order.find(filter).populate("userId", "name lastName email address phoneNumber").populate("products.productId", "name price")
+    const orders = await Order.find(filter).sort({date: -1}).populate("userId", "name lastName email address phoneNumber").populate("products.productId", "name price")
     return orders
 }
 
