@@ -48,7 +48,7 @@ const Usuarios = () => {
       <header className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">
-            Gestión de usuarios
+            Gestión de Usuarios
           </h1>
           <p className="mt-1 text-secondary-500/80">
             Administra los usuarios de tu plataforma

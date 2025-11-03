@@ -64,7 +64,7 @@ export class OrderController {
 
     static async createOrder(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
-            const { userId, products, paymentMethod, address, phoneNumber, comment} = req.body
+            const { userId, products, paymentMethod, address, phoneNumber, comment } = req.body
 
             if(!userId || !products || products.length === 0 || !paymentMethod || !address || !phoneNumber){
                 throw new AppError(
@@ -79,7 +79,7 @@ export class OrderController {
                 paymentMethod,
                 address,
                 phoneNumber,
-                comment: comment || "" 
+                comment: comment || "",
             }
 
             const createdOrder = await addOrder(newOrder)

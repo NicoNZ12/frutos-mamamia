@@ -10,7 +10,7 @@ export const calculatePrice = (product: IProduct, quantity: number): number => {
         basePricePerUnit = price
 
     } else if(unitPrice === "kg"){
-        basePricePerUnit = price / 1000
+        basePricePerUnit = price
 
     } else if(unitPrice === "gr"){
         //para productos donde el precio es por 100gr
