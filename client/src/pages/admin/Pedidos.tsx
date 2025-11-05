@@ -41,19 +41,34 @@ export interface IOrder {
 
 const Pedidos = () => {
   const [orders, setOrders] = useState<IOrder[]>([])
+  const [filteredOrders, setFilteredOrders] = useState<IOrder[]>([])
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus | ''>('')
 
   useEffect(() => {
     const fetchOrders = async () => {
       const data = await getOrders()
       if(data){
         setOrders(data)
+        setFilteredOrders(data)
       }
     }
     fetchOrders()
   }, [])
 
+  useEffect(() => {
+    if (selectedStatus === '') {
+      setFilteredOrders(orders)
+    } else {
+      setFilteredOrders(orders.filter(order => order.status === selectedStatus))
+    }
+  }, [orders, selectedStatus])
+
   const handleOrderUpdate = (orderId: string, newStatus: OrderStatus) => {
     setOrders(prevOrders => prevOrders.map(order => order._id === orderId ? { ...order, status: newStatus } : order))
+  }
+
+  const handleStatusChange = (status: OrderStatus | '') => {
+    setSelectedStatus(status)
   }
 
   const totalOrders = orders.length;
@@ -91,15 +106,18 @@ const Pedidos = () => {
           icon={<Autorenew className="text-blue-600" />} 
         />
         <StatsCard 
-          title="Enviados" 
+          title="Entregados" 
           value={shippedOrders} 
           icon={<LocalShipping className="text-green-600" />} 
         />
       </div>
 
-      <OrderFilters />
+      <OrderFilters 
+        selectedStatus={selectedStatus}
+        onStatusChange={handleStatusChange}
+      />
 
-      <OrderTable orders={orders} onOrderUpdate={handleOrderUpdate} />
+      <OrderTable orders={filteredOrders} onOrderUpdate={handleOrderUpdate} />
 
 
     </main>
