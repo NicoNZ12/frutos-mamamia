@@ -6,9 +6,14 @@ import { AppError } from "../utils/appError"
 export class OrderController {
     static async getOrders(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
-            const { status } = req.query
+            const { status, page, limit } = req.query
+
+              
+            const pageNum = parseInt(page as string) || 1
+            const limitNum = parseInt(limit as string) || 15
+            const skip = (pageNum - 1) * limitNum
    
-            const orders = await getAllOrders(status as string)
+            const orders = await getAllOrders(status as string, pageNum, limitNum, skip)
             res.status(200).json(orders)
 
         }catch(error){

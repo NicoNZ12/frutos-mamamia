@@ -37,7 +37,7 @@ const OrderTable = ({ orders, onOrderUpdate }: IOrderTableProps) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 max-h-[294px] overflow-auto sm:max-h-[360px] 2xl:max-h-[600px]">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 max-h-[294px] overflow-auto sm:max-h-[460px] 2xl:max-h-[500px]">
       
       <div className="overflow-x-auto hidden md:block">
         <table className="w-full min-w-[800px]">

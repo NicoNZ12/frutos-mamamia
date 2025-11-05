@@ -54,10 +54,24 @@ export const handleOrder = async (order: IOrder) => {
     }
 }
 
-export const getOrders = async () => {
+export const getOrders = async (status?: string, page: number = 1, limit: number = 15) => {
     const token = Cookies.get("token")
+    let requestUrl = url
+
     try{
-        const response = await fetch(url, {
+        const params = new URLSearchParams()
+        if (status) {
+            params.append('status', status)
+        }
+
+        params.append('page', page.toString())
+        params.append('limit', limit.toString())
+
+        if (params.toString()) {
+            requestUrl += `?${params.toString()}`
+        }
+
+        const response = await fetch(requestUrl, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -69,6 +83,27 @@ export const getOrders = async () => {
         }
                 
         return data
+    }catch(error){
+        console.error(error)
+        throw error
+    }
+}
+
+export const getAllOrdersForStats = async () => {
+    const token = Cookies.get("token")
+    try{
+        const response = await fetch(`${url}?limit=1000`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        const data = await response.json()
+
+        if(!response.ok){
+            throw data as ApiError
+        }
+                
+        return data.orders || data
     }catch(error){
         console.error(error)
         throw error

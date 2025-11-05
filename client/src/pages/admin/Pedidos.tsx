@@ -3,7 +3,8 @@ import OrderFilters from "../../components/orders/OrderFilter";
 import OrderTable from "../../components/orders/OrderTable";
 import StatsCard from "../../components/orders/StatsCard";
 import { useEffect, useState } from "react";
-import { getOrders } from "../../api/orders/handle-order";
+import { getOrders, getAllOrdersForStats } from "../../api/orders/handle-order";
+import { PaginationControls } from "../../components/Pagination";
 
 export type OrderStatus = 'pendiente' | 'proceso' | 'entregado' | 'cancelado'
 
@@ -39,42 +40,77 @@ export interface IOrder {
   products: IProduct[];
 }
 
+interface IOrderResponse {
+    orders: IOrder[],
+    page: number,
+    totalPages: number,
+}
+
 const Pedidos = () => {
-  const [orders, setOrders] = useState<IOrder[]>([])
-  const [filteredOrders, setFilteredOrders] = useState<IOrder[]>([])
+  const [orders, setOrders] = useState<IOrderResponse>({ orders: [], page: 1, totalPages: 1 })
+  const [allOrders, setAllOrders] = useState<IOrder[]>([])
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | ''>('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const data = await getOrders()
-      if(data){
+  const fetchOrders = async (status?: string, page: number = 1) => {
+    setLoading(true)
+    try {
+      const data = await getOrders(status || undefined, page)
+      if (data) {
         setOrders(data)
-        setFilteredOrders(data)
       }
+    } catch (error) {
+      console.error('Error al traer los pedidos:', error)
+    } finally {
+      setLoading(false)
     }
-    fetchOrders()
-  }, [])
+  }
+
+  const fetchAllOrdersForStats = async () => {
+    try {
+      const data = await getAllOrdersForStats()
+      if (data) {
+        setAllOrders(data)
+      }
+    } catch (error) {
+      console.error('Error al traer todos los pedidos para estadísticas:', error)
+    }
+  }
 
   useEffect(() => {
-    if (selectedStatus === '') {
-      setFilteredOrders(orders)
-    } else {
-      setFilteredOrders(orders.filter(order => order.status === selectedStatus))
-    }
-  }, [orders, selectedStatus])
+    fetchOrders(undefined, 1)
+    fetchAllOrdersForStats()
+  }, []) 
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedStatus])
+
+  useEffect(() => {
+    fetchOrders(selectedStatus || undefined, currentPage)
+  }, [currentPage, selectedStatus])
+
+  const handlePageChange = (_: unknown, page: number) => {
+    setCurrentPage(page)
+  }
 
   const handleOrderUpdate = (orderId: string, newStatus: OrderStatus) => {
-    setOrders(prevOrders => prevOrders.map(order => order._id === orderId ? { ...order, status: newStatus } : order))
+    setOrders(prevOrders => ({
+      ...prevOrders,
+      orders: prevOrders.orders.map(order => order._id === orderId ? { ...order, status: newStatus } : order)
+    }))
+    setAllOrders(prevOrders => prevOrders.map(order => order._id === orderId ? { ...order, status: newStatus } : order))
   }
 
   const handleStatusChange = (status: OrderStatus | '') => {
     setSelectedStatus(status)
   }
 
-  const totalOrders = orders.length;
-  const pendingOrders = orders.filter(order => order.status === 'pendiente').length;
-  const processingOrders = orders.filter(order => order.status === 'proceso').length;
-  const shippedOrders = orders.filter(order => order.status === 'entregado').length;
+  const totalOrders = allOrders.length;
+  const pendingOrders = allOrders.filter(order => order.status === 'pendiente').length;
+  const processingOrders = allOrders.filter(order => order.status === 'proceso').length;
+  const shippedOrders = allOrders.filter(order => order.status === 'entregado').length;
 
   return (
     <main>
@@ -117,7 +153,21 @@ const Pedidos = () => {
         onStatusChange={handleStatusChange}
       />
 
-      <OrderTable orders={filteredOrders} onOrderUpdate={handleOrderUpdate} />
+      {loading ? (
+        <div className="flex justify-center items-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      ) : (
+        <OrderTable orders={orders.orders} onOrderUpdate={handleOrderUpdate} />
+      )}
+
+      <div className="flex justify-center mt-4">
+        <PaginationControls
+          currentPage={orders.page}
+          totalPages={orders.totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
 
 
     </main>
