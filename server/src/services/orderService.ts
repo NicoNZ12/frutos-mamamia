@@ -3,7 +3,7 @@ import User from "../model/userModel";
 import Product from "../model/productModel";
 import { calculatePrice } from "../utils/calculatePrice";
 
-export const getAllOrders = async (status: string) => {
+export const getAllOrders = async (status: string, page: number, limit: number, skip: number) => {
 
     const filter: {status?: string} = {}
 
@@ -11,12 +11,27 @@ export const getAllOrders = async (status: string) => {
         filter.status = status
     }
 
-    const orders = await Order.find(filter).populate("userId", "name email address phoneNumber").populate("products.productId", "name price")
-    return orders
+    const totalOrders = await Order.countDocuments(filter)
+
+    const orders = await Order.find(filter)
+        .sort({ date: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate("userId", "name lastName email address phoneNumber")
+        .populate("products.productId", "name price")
+        .exec()
+
+    return {
+        totalOrders: totalOrders,
+        totalPages: Math.ceil(totalOrders / limit),
+        page: page,
+        limit: limit,
+        orders: orders
+    };
 }
 
 export const getOrderById = async (id: string) => {
-    const order = await Order.findById(id).populate("userId", "name email address phoneNumber").populate("products.productId", "name price").lean()
+    const order = await Order.findById(id).populate("userId", "name lastName email address phoneNumber").populate("products.productId", "name price").lean()
     return order
 }
 
@@ -44,7 +59,8 @@ export const addOrder = async (order: INewOrder) => {
             productId: product._id,
             name: product.name,
             price: product.price,
-            quantity: item.quantity
+            quantity: item.quantity,
+            imgUrl: item.imgUrl
         })
 
         totalPrice += totalPricePerProduct

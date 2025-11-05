@@ -17,5 +17,5 @@ export const generateToken = (userData: IUser) => {
         isAdmin: userData.isAdmin
     };
 
-    return jwt.sign(user, jwt_secret, { expiresIn: "1h" })
+    return jwt.sign(user, jwt_secret, { expiresIn: "8h" })
 }

@@ -67,7 +67,7 @@ const ProductCard = ({
             </div>
             
             <button 
-              className="bg-primary hover:bg-primary-600 text-white text-xs font-medium px-3 py-2 rounded-lg transition-colors duration-200 hover:shadow-md w-full sm:w-auto"
+              className="bg-primary hover:bg-primary-600 text-white text-xs font-medium px-3 py-2 rounded-lg transition-colors duration-200 hover:shadow-md w-full sm:w-auto cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation()
                 openModal()

@@ -94,7 +94,8 @@ const Orders = () => {
           productId: item.id,
           name: item.name,
           quantity: item.quantity,
-          price: item.price
+          price: item.price,
+          imgUrl: item.image
         })),
         address: form.address,
         phoneNumber: form.phoneNumber,

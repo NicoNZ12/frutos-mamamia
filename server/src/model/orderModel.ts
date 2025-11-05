@@ -7,7 +7,8 @@ export interface INewOrder {
         productId: string,
         name: string,
         quantity: number,
-        price: number
+        price: number,
+        imgUrl: string
     }[],
     paymentMethod: string,
     address: string,
@@ -55,6 +56,9 @@ const orderSchema = new Schema({
             type: Number,
             required: true,
             min: 0
+        },
+        imgUrl: {
+            type: String
         }
     }],
     totalAmount: {  
@@ -64,7 +68,7 @@ const orderSchema = new Schema({
     },
     status: { 
         type: String,
-        enum: ['pendiente', 'en proceso', 'entregado', 'cancelado'],
+        enum: ['pendiente', 'proceso', 'entregado', 'cancelado'],
         default: 'pendiente'
     },
     date: {

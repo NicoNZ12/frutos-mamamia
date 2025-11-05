@@ -17,6 +17,7 @@ import EditarProducto from '../pages/admin/EditarProducto.tsx'
 import ProtectedRoute from '../components/auth/ProtectedRoute.tsx'
 import PublicRoute from '../components/auth/PublicRoute.tsx'
 import Unauthorized from '../pages/Unauthorized.tsx'
+import PedidoDetalle from '../pages/admin/PedidoDetalle.tsx'
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
                 Component: Pedidos
             },
             {
+                path: "pedidos/:id",
+                Component: PedidoDetalle
+            },
+            {
                 path: "usuarios",
                 Component: Usuarios
             },
@@ -78,7 +83,6 @@ const router = createBrowserRouter([
                 path: "editar/:id",
                 Component: EditarProducto
             }
-            
         ]
     },
     {
