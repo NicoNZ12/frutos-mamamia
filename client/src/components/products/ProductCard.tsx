@@ -52,7 +52,7 @@ const ProductCard = ({
 
         {/* info producto */}
         <div className="p-4 flex flex-col h-32">
-          <h3 className="font-semibold text-gray-800 text-sm mb-2 group-hover:text-primary transition-colors duration-200 line-clamp-2 h-10 md:text-lg lg:text-lg xl:text-lg">
+          <h3 className="font-semibold text-gray-800 text-sm mb-2 group-hover:text-primary transition-colors duration-200 line-clamp-1 h-8 md:text-lg lg:text-lg xl:text-lg">
             {name}
           </h3>
           
