@@ -2,9 +2,10 @@ import { Autorenew, HourglassTop, LocalShipping, MoveToInbox } from "@mui/icons-
 import OrderFilters from "../../components/orders/OrderFilter";
 import OrderTable from "../../components/orders/OrderTable";
 import StatsCard from "../../components/orders/StatsCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getOrders, getAllOrdersForStats } from "../../api/orders/handle-order";
 import { PaginationControls } from "../../components/Pagination";
+import { useNotificationContext } from "../../context/NotificationContext";
 
 export type OrderStatus = 'pendiente' | 'proceso' | 'entregado' | 'cancelado'
 
@@ -53,6 +54,8 @@ const Pedidos = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(false)
 
+  const { setRefreshCallback } = useNotificationContext()
+
   const fetchOrders = async (status?: string, page: number = 1) => {
     setLoading(true)
     try {
@@ -78,10 +81,20 @@ const Pedidos = () => {
     }
   }
 
+  const refreshAllData = useCallback(() => {
+    fetchOrders(selectedStatus || undefined, currentPage)
+    fetchAllOrdersForStats()
+  }, [selectedStatus, currentPage])
+
   useEffect(() => {
     fetchOrders(undefined, 1)
     fetchAllOrdersForStats()
   }, []) 
+
+
+  useEffect(() => {
+    setRefreshCallback(refreshAllData)
+  }, [setRefreshCallback, refreshAllData])
 
   useEffect(() => {
     setCurrentPage(1)

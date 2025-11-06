@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { addOrder, getAllOrders, getOrderById, getOrdersByUserId, updateStatus } from "../services/orderService"
 import { INewOrder } from "../model/orderModel"
 import { AppError } from "../utils/appError"
+import { io } from ".."
 
 export class OrderController {
     static async getOrders(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -88,6 +89,11 @@ export class OrderController {
             }
 
             const createdOrder = await addOrder(newOrder)
+            
+            io.emit("newOrder", {
+                message: "Tienes un nuevo pedido",
+                date: new Date()
+            })
 
             res.status(201).json({ message: "Pedido creado correctamente.", payload: createdOrder })
 
