@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactNode, createContext, useContext } from "react"
 import Cookies from "js-cookie"
+import { connectSocket } from "../websocket/socket"
 
 interface IAuthContext {
     token: string | null
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = (newToken: string, options: ILoginOptions) => {
         Cookies.set('token', newToken, options)
         setToken(newToken)
+        connectSocket(newToken)
     }
 
     const logout = () => {

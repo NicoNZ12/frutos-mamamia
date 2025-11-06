@@ -9,21 +9,38 @@ import orderRoute from './routes/orderRoute'
 import cors from 'cors'
 import { errorHandler } from './middlewares/errorHandler'
 import { authentication } from './middlewares/authMiddleware'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 
 dotenv.config()
 
 const PORT = process.env.SERVER_PORT || 4000
 
-//config
 const app = express()
+const httpServer = createServer(app)
+export const io = new Server(httpServer, {
+    cors: {
+        origin: process.env.FRONTEND_URL || "http://localhost:5173",
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        credentials: true,
+    }
+})
+
+//config socket.io
+app.set("io", io)
+
+io.on("connection", socket => {
+    console.log("Conectado al servidor socket")
+})
 
 //middlewares
-app.use(express.json())
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "*",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
 }))
+app.use(express.json())
 
 //endpoint inicial
 app.get("/", (_req, res) => {
@@ -41,6 +58,6 @@ app.use("/pedidos", authentication, orderRoute)
 app.use(errorHandler);
 
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`server running on http://localhost:${PORT}`)
 })

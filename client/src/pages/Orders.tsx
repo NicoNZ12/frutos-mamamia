@@ -103,7 +103,6 @@ const Orders = () => {
         comment: form.comment || ""
       }
 
-      console.log(orderData)
       const response = await handleOrder(orderData)
 
       if(!response.success){
