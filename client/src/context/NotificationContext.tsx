@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { getSocket } from "../websocket/socket";
 import toast from "react-hot-toast";
 import { useAuth } from "./AuthContext";
@@ -19,12 +19,19 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [notification, setNotification] = useState<INotification | null>(null);
   const [refreshCallback, setRefreshCallback] = useState<() => void>(() => () => {});
+  const refreshCallbackRef = useRef(refreshCallback);
   const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    refreshCallbackRef.current = refreshCallback;
+  }, [refreshCallback]);
 
   useEffect(() => {
     if (!isAuthenticated) {
       return
     }
+
+    let cleanupFunction: (() => void) | null = null
 
     const setupSocket = () => {
       const socket = getSocket()
@@ -33,6 +40,9 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
         setTimeout(setupSocket, 1000)
         return
       }
+
+
+      socket.removeAllListeners("newOrder")
 
       if (!socket.connected) {
         socket.connect()
@@ -44,7 +54,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
         
         const audio = new Audio("/notificacion-general-3.mp3")
         audio.play().catch((error) => {
-          console.error("Error al reproducir el sonido de notificación:", error)
+          console.error("Error al reproducir sonido:", error)
         })
 
         toast.success(`${data.message}`, {
@@ -52,22 +62,23 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
           icon: "🔔"
         })
 
-        if (refreshCallback) {
-          refreshCallback()
+        if (refreshCallbackRef.current) {
+          refreshCallbackRef.current()
         }
       }
 
       socket.on("newOrder", handleNewOrder)
       
       socket.on("connect", () => {
-        console.log("Socket conectado en NotificationContext")
+        console.log("Socket conectado exitosamente")
       })
 
       socket.on("disconnect", () => {
-        console.log("Socket desconectado en NotificationContext")
+        console.log("Socket desconectado")
       })
 
-      return () => {
+      cleanupFunction = () => {
+        console.log("Limpiando listeners de socket...")
         socket.off("newOrder", handleNewOrder)
         socket.off("connect")
         socket.off("disconnect")
@@ -78,8 +89,11 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
     
     return () => {
       clearTimeout(timeoutId)
+      if (cleanupFunction) {
+        cleanupFunction()
+      }
     }
-  }, [refreshCallback, isAuthenticated])
+  }, [isAuthenticated])
 
   const refreshOrders = () => {
     if (refreshCallback) {
