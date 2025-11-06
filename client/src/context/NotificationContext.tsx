@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getSocket } from "../websocket/socket";
 import toast from "react-hot-toast";
+import { useAuth } from "./AuthContext";
 
 interface INotification {
     message: string
@@ -18,48 +19,67 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [notification, setNotification] = useState<INotification | null>(null);
   const [refreshCallback, setRefreshCallback] = useState<() => void>(() => () => {});
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    const socket = getSocket()
-
-    if (!socket) {
-      console.error("Socket no está disponible en NotificationContext")
+    if (!isAuthenticated) {
       return
     }
 
-    if (!socket.connected) {
-      console.error("Socket no está conectado, intentando conectar...")
-      socket.connect()
-    }
+    const setupSocket = () => {
+      const socket = getSocket()
 
-    const handleNewOrder = (data: INotification) => {
+      if (!socket) {
+        setTimeout(setupSocket, 1000)
+        return
+      }
+
+      if (!socket.connected) {
+        socket.connect()
+      }
+
+      const handleNewOrder = (data: INotification) => {
+        
+        setNotification(data)
+        
+        const audio = new Audio("/notificacion-general-3.mp3")
+        audio.play().catch((error) => {
+          console.error("Error al reproducir el sonido de notificación:", error)
+        })
+
+        toast.success(`${data.message}`, {
+          duration: 5000,
+          icon: "🔔"
+        })
+
+        if (refreshCallback) {
+          refreshCallback()
+        }
+      }
+
+      socket.on("newOrder", handleNewOrder)
       
-      setNotification(data)
-      
-      const audio = new Audio("/notificacion-general-3.mp3")
-      audio.play().catch((error) => {
-        console.error("Error al reproducir el sonido de notificación:", error)
+      socket.on("connect", () => {
+        console.log("Socket conectado en NotificationContext")
       })
 
-      toast.success(`${data.message}`, {
-        duration: 5000,
-        icon: "🔔"
+      socket.on("disconnect", () => {
+        console.log("Socket desconectado en NotificationContext")
       })
 
-      if (refreshCallback) {
-        refreshCallback()
+      return () => {
+        socket.off("newOrder", handleNewOrder)
+        socket.off("connect")
+        socket.off("disconnect")
       }
     }
 
-    // Registrar el listener
-    socket.on("newOrder", handleNewOrder)
-
+    const timeoutId = setTimeout(setupSocket, 100)
+    
     return () => {
-      socket.off("newOrder", handleNewOrder)
-      socket.off("connect")
-      socket.off("disconnect")
+      clearTimeout(timeoutId)
     }
-  }, [refreshCallback])
+  }, [refreshCallback, isAuthenticated])
 
   const refreshOrders = () => {
     if (refreshCallback) {
@@ -80,7 +100,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       {children}
     </NotificationContext.Provider>
   )
-};
+}
 
 function useNotificationContext() {
     const context = useContext(NotificationContext);

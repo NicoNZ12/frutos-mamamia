@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const token = Cookies.get("token")
         if (token) {
             setToken(token)
+            connectSocket(token)
         }
     }, [])
 
